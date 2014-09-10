@@ -8,17 +8,20 @@
 
 class A;
 
-std::string debugId(uint64_t id)
+std::string debugId(uint64_t id, int tier)
 {
     static const uint64_t B = 256;
-    static const uint64_t D = 8;
+
+    id /= (B << ( 8 *(8 - tier - 1)));
 
     std::string did;
-
-    for (auto i = 0; i < D; ++i)
+    for (auto i = 0; i < tier; ++i)
     {
         auto r = id % B;
-        did = std::to_string(r) + "-" + did;
+        if (did.empty())
+            did = std::to_string(r);
+        else
+            did = std::to_string(r) + "-" + did;
         id /= B;
     }
 
@@ -106,11 +109,7 @@ struct tag
     tag()
     {
         auto t = static_cast<T*>(this);
-        t->id = id<T>::index;
-
-        auto _id = debugId(t->id);
-
-        auto i = 0;
+        t->id = id<T>::value;
     }
 };
 
@@ -118,12 +117,6 @@ struct tag
 class A : tag<A> {
 public:
     uint64_t id;
-
-    A() 
-    {
-        auto x = this->id;
-        auto _x = debugId(x);
-    }
 };
 
 class B : public A, tag<B>
@@ -202,6 +195,14 @@ int main()
     auto iie = id<E>::value;
     auto iiF = id<F>::value;
 
+
+    C c;
+
+    auto idC = debugId(c.id, id<C>::tier);
+
+    
+    F f;
+    auto idF = debugId(f.id, id<F>::tier);
 
     /*C c;
     auto cid = c.id;
