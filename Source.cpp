@@ -37,7 +37,7 @@ bool isa(const DerivedT* d)
 
     auto did = d->id;
     const static uint64_t FULL_MASK = -1;
-    auto mask = FULL_MASK << (8 * (sizeof(uint64_t) - tier -1));
+    auto mask = FULL_MASK << (8 * (sizeof(uint64_t) - tier));
     auto mdid = did & mask;
     auto r = mdid == bid;
     return r;
@@ -177,6 +177,8 @@ struct id
 
 int main()
 {
+    auto noop = 0;
+
     auto ta = id<A>::tier;
     auto tb = id<B>::tier;
     auto tc = id<C>::tier;
@@ -204,18 +206,28 @@ int main()
     F f;
     auto idF = debugId(f.id, id<F>::tier);
 
-    /*C c;
-    auto cid = c.id;
-    auto _cid = debugId(cid);
-    auto xid = id<C>::value;
-    auto _xid = debugId(xid);
+    {
+        auto is_C_A = isa<A>(&c);
+        auto is_C_B = isa<B>(&c);
+        auto is_C_C = isa<C>(&c);
+        
+        E e;
+        auto is_E_A = isa<A>(&e);
+        auto is_E_B = isa<B>(&e);
+        auto is_E_C = isa<C>(&e);
+        auto is_E_E = isa<E>(&e);
+        auto is_E_F = isa<F>(&e);
+        
 
-    auto is1 = isa<A>(&c);
-    auto is2 = isa<B>(&c);
-    auto is3 = isa<C>(&c);*/
-    //auto isX = isa<X>(&c);
+        auto is_F_A = isa<A>(&f);
+        auto is_F_B = isa<B>(&f);
+        auto is_F_C = isa<C>(&f);
+        auto is_F_E = isa<E>(&f);
+        auto is_F_F = isa<F>(&f);
 
-    
+        noop++;
+    }
+
 
     return 0;
 }
