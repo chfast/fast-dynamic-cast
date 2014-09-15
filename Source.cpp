@@ -175,7 +175,7 @@ struct id
     static const auto value = id_of<T>::value;
 };
 
-int main()
+int main0()
 {
     auto noop = 0;
 
