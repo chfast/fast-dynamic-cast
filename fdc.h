@@ -39,13 +39,16 @@ struct index_of<T, Kind::other>
 template<typename T, Kind = type<T>::kind>
 struct id_of
 {
-	static const auto value = 0;
+	static const auto value = static_cast<uint64_t>(-1);
 };
 
 template<typename T>
 struct id_of<T, Kind::first>
 {
-	static const auto value = id_of<type<T>::BaseT>::value;
+	//static const auto offset = (8 * (8 - tier_of<T>::value));
+	//static const auto value = id_of<type<T>::BaseT>::value & ~(uint64_t(1) << offset);
+	static const auto mask = 0xFF00000000000000 >> (8*(tier_of<T>::value - 1));
+	static const auto value = id_of<type<T>::BaseT>::value & ~mask;
 };
 
 template<typename T>
@@ -70,9 +73,14 @@ bool isa(const DerivedT* d)
 	auto tier = id<BaseT>::tier;
 
 	auto did = d->_typeid;
+
+	// TODO: Optimization
+	//if (did == bid)
+	//	return true;
+
 	const static uint64_t FULL_MASK = -1;
-	auto mask = FULL_MASK << (8 * (sizeof(uint64_t) - tier));
-	auto mdid = did & mask;
+	auto mask = FULL_MASK >> (8 * tier);
+	auto mdid = did | mask;
 	auto r = mdid == bid;
 	return r;
 }
