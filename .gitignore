@@ -26,3 +26,8 @@
 *.exe
 *.out
 *.app
+
+vcproj/Debug/*
+vcproj/*.sdf
+vcproj/*.opensdf
+

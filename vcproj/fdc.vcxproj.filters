@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\fdc.h" />
+    <ClInclude Include="..\fdc-hierarchy.h" />
+    <ClInclude Include="..\fdc-inc.h" />
+    <ClInclude Include="..\fdc-tag.h" />
+    <ClInclude Include="..\test\a\a.h">
+      <Filter>test\a</Filter>
+    </ClInclude>
+    <ClInclude Include="..\test\a\a-hierachy.h">
+      <Filter>test\a</Filter>
+    </ClInclude>
+    <ClInclude Include="..\test\a\test.h">
+      <Filter>test\a</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source.cpp" />
+    <ClCompile Include="..\test\test-main.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\a\a.cpp">
+      <Filter>test\a</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\a\test-a.cpp">
+      <Filter>test\a</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="test">
+      <UniqueIdentifier>{fa4aa6e1-894c-437f-b260-1ce91af357ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\a">
+      <UniqueIdentifier>{092397e6-6c50-4e1a-8a6d-dd2a2244d971}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
