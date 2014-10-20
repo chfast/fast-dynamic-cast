@@ -3,7 +3,7 @@
 
 #include "a.h"
 
-#include "fdc-hierarchy.h"
+#include "../../fdc-hierarchy.h"
 
 using namespace fdctest::a;
 

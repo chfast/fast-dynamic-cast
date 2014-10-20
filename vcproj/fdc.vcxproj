@@ -24,6 +24,7 @@
     <ClCompile Include="..\test\a\a.cpp" />
     <ClCompile Include="..\test\a\test-a.cpp" />
     <ClCompile Include="..\test\test-main.cpp" />
+    <ClCompile Include="..\typelists.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{06F9B6C4-E33B-45D2-854E-462BC1B54F5E}</ProjectGuid>
@@ -68,7 +69,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libs\boost_1_56_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

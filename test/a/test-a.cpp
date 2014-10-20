@@ -2,7 +2,7 @@
 #include "a.h"
 
 #include "a-hierachy.h"
-#include "fdc.h"
+#include "../../fdc.h"
 
 #include <stdexcept>
 #include <string>
