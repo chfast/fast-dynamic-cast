@@ -12,6 +12,7 @@
 #include <boost/type_traits.hpp>
 #include <boost/mpl/comparison.hpp>
 #include <boost/mpl/find_if.hpp>
+#include <boost/mpl/contains.hpp>
 
 using namespace boost;
 using namespace mpl;
@@ -35,22 +36,24 @@ template<typename Types, typename T> struct dsubs {
 };
 
 template<typename Types, typename T> struct dsubs_set {
-	using type = typename fold<dsubs<Types, T>::type, set<>, insert<_1, _2>>::type;
+	using _dsubs = typename dsubs<Types, T>::type;
+	using type = typename fold<_dsubs, set<>, insert<_1, begin<_1>, _2>>::type;
 };
 
 template<typename Types, typename T> struct base {
-	using iter = typename find_if < bases<Types, T>::type, contains<dsubs_set<Types, _1>::type, T> > ;
-	using type = deref<iter>::type;
+	using _bases = typename  bases<Types, T>::type;
+	using iter = typename find_if <_bases, contains<dsubs_set<Types, _1>, T> >::type;
+	using type = typename deref<iter>::type;
 };
 
 
 
 
-class A {};
+class A { using a = A; };
 
-class B: public A {};
+class B: public A { using b = B; };
 
-class C: public B {};
+class C: public B { using c = C;  };
 
 using types = mpl::list<A, B, C>;
 
@@ -83,8 +86,8 @@ static_assert(size<b_dsubs>::value == 1, "");
 using b_dsubs_set = dsubs_set<types, B>::type;
 static_assert(size<b_dsubs_set>::value == 1, "");
 
-using c_base = base<types, C>::type;
+using c_base = ::base<types, C>::type;
 
 c_base ccc;
-//static_assert(is_same<base<types, C>::type, C>::value, "");
+static_assert(is_same<::base<types, C>::type, B>::value, "");
 
