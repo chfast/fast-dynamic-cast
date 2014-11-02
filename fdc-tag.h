@@ -18,7 +18,7 @@ struct tag
 struct root
 {
 public:
-	uint64_t _typeid = -1;
+	uint64_t _typeid = 0;
 };
 
 }
