@@ -13,6 +13,7 @@
 #include <boost/mpl/comparison.hpp>
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/contains.hpp>
+#include <boost/mpl/if.hpp>
 
 using namespace boost;
 using namespace mpl;
@@ -20,9 +21,17 @@ using namespace mpl::placeholders;
 
 template<typename Types, typename T> struct bases { using type = typename mpl::copy_if<Types, and_<not_<is_same<_1, T>>, is_base_of<_1, T>>, mpl::back_inserter<mpl::vector<>>>::type; };
 
+
+template<typename Types, typename T> struct is_root {
+	using _bases = typename bases<Types, T>::type;
+	using _size = typename size <_bases >::type;
+	using type = typename equal_to<_size, int_<0>>::type;
+	static const auto value = type::value;
+};
+
 template<typename Types> struct roots {
 	using type = typename
-		mpl::copy_if<Types, equal_to<size<bases<Types, _1>>, int_<0>>, back_inserter<vector<>>>::type;
+		mpl::copy_if<Types, is_root<Types, _1>, back_inserter<vector<>>>::type;
 };
 
 template<typename Types, typename T> struct subs {
@@ -44,6 +53,23 @@ template<typename Types, typename T> struct base {
 	using _bases = typename  bases<Types, T>::type;
 	using iter = typename find_if <_bases, contains<dsubs_set<Types, _1>, T> >::type;
 	using type = typename deref<iter>::type;
+};
+
+template<typename Types, typename T> struct level;
+
+template<typename Types, typename T, bool is_root> struct level_from_base {
+	using _base = typename ::base<Types, T>::type;
+	static const auto _base_level = typename level<Types, _base>::value;
+	static const auto value = _base_level + 1;
+};
+
+template<typename Types, typename T> struct level_from_base<Types, T, true> {
+	static const auto value = 0;
+};
+
+template<typename Types, typename T> struct level {
+	static const auto _is_root = is_root<Types, T>::value;
+	static const auto value = level_from_base<Types, T, _is_root>::value;
 };
 
 
@@ -90,4 +116,12 @@ using c_base = ::base<types, C>::type;
 
 c_base ccc;
 static_assert(is_same<::base<types, C>::type, B>::value, "");
+
+static_assert(is_root<types, A>::value, "");
+
+static_assert(level<types, A>::value == 0, "");
+
+static_assert(level<types, B>::value == 1, "");
+
+static_assert(level<types, C>::value == 2, "");
 
