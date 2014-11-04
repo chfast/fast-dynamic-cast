@@ -1,4 +1,6 @@
 
+#include <cstdint>
+
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/copy_if.hpp>
 #include <boost/mpl/back_inserter.hpp>
@@ -21,6 +23,8 @@ using namespace mpl;
 using namespace mpl::placeholders;
 
 template<typename Types, typename T> struct bases { using type = typename mpl::copy_if<Types, and_<not_<is_same<_1, T>>, is_base_of<_1, T>>, mpl::back_inserter<mpl::vector<>>>::type; };
+
+using id_t = uint64_t;
 
 
 template<typename Types, typename T> struct is_root {
@@ -86,6 +90,25 @@ template<typename Types, typename T> struct child_index {
 	static const auto value = _it::pos::value;
 };
 
+template<typename Types, typename T> struct id;
+
+template<typename Types, typename T, bool is_root> struct id_impl {
+	static const auto _level = level<Types, T>::value;
+	static_assert(_level != 0, "not specialization for root");
+	static const auto _index = child_index<Types, T>::value + 1;
+	using _base = typename ::base<Types, T>::type;
+	static const auto value = id<Types, _base>::value + (_index << (8 * (_level - 1)));
+};
+
+template<typename Types, typename T> struct id_impl<Types, T, true> {
+	static const id_t value = 0;
+};
+
+template<typename Types, typename T> struct id {
+	static const auto _is_root = is_root<Types, T>::value;
+	static const auto value = id_impl<Types, T, _is_root>::value;
+};
+
 
 
 
@@ -148,3 +171,9 @@ static_assert(child_index<types, B>::value == 0, "");
 static_assert(child_index<types, B2>::value == 1, "");
 static_assert(child_order<types, C>::value == 2, "");
 static_assert(child_order<types, C2>::value == 3, "");
+
+static_assert(id<types, A>::value == 0, "");
+static_assert(id<types, B>::value == 0x01, "");
+static_assert(id<types, B2>::value == 0x02, "");
+static_assert(id<types, C>::value == 0x0101, "");
+static_assert(id<types, C2>::value == 0x0201, "");
