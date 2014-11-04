@@ -11,7 +11,7 @@ struct tag
 	tag()
 	{
 		auto t = static_cast<T*>(this);
-		t->_typeid = id<T>::value;
+		t->_typeid = info<T>::value;
 	}
 };
 

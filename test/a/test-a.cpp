@@ -51,7 +51,6 @@ void test()
 	TEST(D1, Root);
 	TEST(D2, Root);
 	TEST(D3, Root);
-	TEST(D4, Root);
 
 	TEST(A0, A0);
 	TEST(A1, A0);
@@ -75,7 +74,6 @@ void test()
 	TEST(D1, B0);
 	TEST(D2, B0);
 	TEST(D3, B0);
-	TEST(D4, B0);
 	
 	TEST(A0, B0);
 	TEST(A1, B0);
@@ -99,7 +97,6 @@ void test()
 	TEST(D1, B0);
 	TEST(D2, B0);
 	TEST(D3, B0);
-	TEST(D4, B0);
 
 	TEST(A0, C0);
 	TEST(A1, C0);
@@ -123,7 +120,6 @@ void test()
 	TEST(D1, C0);
 	TEST(D2, C0);
 	TEST(D3, C0);
-	TEST(D4, C0);
 
 	TEST(A0, D0);
 	TEST(A1, D0);
@@ -147,7 +143,6 @@ void test()
 	TEST(D1, D0);
 	TEST(D2, D0);
 	TEST(D3, D0);
-	TEST(D4, D0);
 }
 
 

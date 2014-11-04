@@ -1,76 +1,137 @@
 
 #pragma once
 
+#include <cstdint>
+
+#define BOOST_MPL_LIMIT_LIST_SIZE 50
+
+#include <boost/mpl/list.hpp>
+#include <boost/mpl/copy_if.hpp>
+#include <boost/mpl/back_inserter.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/map.hpp>
+#include <boost/mpl/insert.hpp>
+#include <boost/mpl/set.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/mpl/size.hpp>
+#include <boost/mpl/front.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/mpl/comparison.hpp>
+#include <boost/mpl/find_if.hpp>
+#include <boost/mpl/contains.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/order.hpp>
+
+
 namespace fdc {
 
+using namespace boost;
+using namespace mpl;
+using namespace mpl::placeholders;
 
-template<typename T, Kind = type<T>::kind>
-struct tier_of
-{
+template<typename Types, typename T> struct bases { using type = typename mpl::copy_if<Types, and_<not_<is_same<_1, T>>, is_base_of<_1, T>>, mpl::back_inserter<mpl::vector<>>>::type; };
+
+using id_t = uint64_t;
+
+
+template<typename Types, typename T> struct is_root {
+	using _bases = typename bases<Types, T>::type;
+	using _size = typename size <_bases >::type;
+	using type = typename equal_to<_size, int_<0>>::type;
+	static const auto value = type::value;
+};
+
+template<typename Types> struct roots {
+	using type = typename
+		mpl::copy_if<Types, is_root<Types, _1>, back_inserter<vector<>>>::type;
+};
+
+template<typename Types, typename T> struct subs {
+	using type = typename
+		copy_if<Types, and_<not_<is_same<T, _1>>, is_base_of<T, _1>>, back_inserter<vector<>>>::type;
+};
+
+template<typename Types, typename T> struct dsubs {
+	using _subs = typename subs<Types, T>::type;
+	using type = typename roots<_subs>::type;
+};
+
+template<typename Types, typename T> struct dsubs_set {
+	using _dsubs = typename dsubs<Types, T>::type;
+	using type = typename fold<_dsubs, set<>, insert<_1, begin<_1>, _2>>::type;
+};
+
+template<typename Types, typename T> struct base {
+	using _bases = typename  bases<Types, T>::type;
+	using iter = typename find_if <_bases, contains<dsubs_set<Types, _1>, T> >::type;
+	using type = typename deref<iter>::type;
+};
+
+template<typename Types, typename T> struct level;
+
+template<typename Types, typename T, bool is_root> struct level_from_base {
+	using _base = typename fdc::base<Types, T>::type;
+	static const auto _base_level = typename level<Types, _base>::value;
+	static const auto value = _base_level + 1;
+};
+
+template<typename Types, typename T> struct level_from_base<Types, T, true> {
 	static const auto value = 0;
 };
 
-template<typename T>
-struct tier_of<T, Kind::other>
-{
-	static const auto value = tier_of<type<T>::PrevT>::value;
+template<typename Types, typename T> struct level {
+	static const auto _is_root = is_root<Types, T>::value;
+	static const auto value = level_from_base<Types, T, _is_root>::value;
+};
+
+template<typename Types, typename T> struct child_order {
+	using _base = typename fdc::base<Types, T>::type;
+	using _bros = typename dsubs_set<Types, _base>::type;
+	static const auto value = order<_bros, T>::value;
+};
+
+template<typename Types, typename T> struct child_index {
+	using _base = typename fdc::base<Types, T>::type;
+	using _bros = typename dsubs<Types, _base>::type;
+	using _it = typename find<_bros, T>::type;
+	static const auto value = _it::pos::value;
+};
+
+template<typename Types, typename T> struct id;
+
+template<typename Types, typename T, bool is_root> struct id_impl {
+	static const auto _level = level<Types, T>::value;
+	static_assert(_level != 0, "not specialization for root");
+	static const auto _index = child_index<Types, T>::value + 1;
+	using _base = typename fdc::base<Types, T>::type;
+	static const auto value = id<Types, _base>::value + (_index << (8 * (_level - 1)));
+};
+
+template<typename Types, typename T> struct id_impl<Types, T, true> {
+	static const id_t value = 0;
+};
+
+template<typename Types, typename T> struct id {
+	static const auto _is_root = is_root<Types, T>::value;
+	static const auto value = id_impl<Types, T, _is_root>::value;
 };
 
 template<typename T>
-struct tier_of<T, Kind::first>
-{
-	static const auto value = tier_of<type<T>::BaseT>::value + 1;
-};
-
-
-template<typename T, Kind = type<T>::kind>
-struct index_of
-{
-	static const auto value = 1;
-};
+struct get_types;
 
 template<typename T>
-struct index_of<T, Kind::other>
+struct info
 {
-	static const auto value = index_of<type<T>::PrevT>::value + 1;
-};
-
-
-template<typename T, Kind = type<T>::kind>
-struct id_of
-{
-	static const auto value = 0; //static_cast<uint64_t>(-1);
-};
-
-template<typename T>
-struct id_of<T, Kind::first>
-{
-	//static const auto offset = (8 * (8 - tier_of<T>::value));
-	//static const auto value = id_of<type<T>::BaseT>::value & ~(uint64_t(1) << offset);
-	static const auto mask = 0x0100000000000000 >> (8*(tier_of<T>::value - 1));
-	static const auto value = id_of<type<T>::BaseT>::value | mask;
-};
-
-template<typename T>
-struct id_of<T, Kind::other>
-{
-	static const auto offset = (8 * (8 - tier_of<T>::value));
-	static const auto value = id_of<type<T>::PrevT>::value + (uint64_t(1) << offset);
-};
-
-template<typename T>
-struct id
-{
-	static const auto tier = tier_of<T>::value;
-	static const auto index = index_of<T>::value;
-	static const auto value = id_of<T>::value;
+	using types = typename get_types<T>::types;
+	static const auto tier = level<types, T>::value;
+	static const auto value = id<types, T>::value;
 };
 
 template<typename BaseT, typename DerivedT>
 bool isa(const DerivedT* d)
 {
-	auto bid = id<BaseT>::value;	// static const
-	auto tier = id<BaseT>::tier;	// static const
+	auto bid = info<BaseT>::value;	// static const
+	auto tier = info<BaseT>::tier;	// static const
 
 	auto did = d->_typeid;
 
@@ -79,7 +140,7 @@ bool isa(const DerivedT* d)
 	//	return true;
 
 	static const uint64_t FULL_MASK = -1;
-	auto mask = FULL_MASK >> (8 * tier);	// static const
+	auto mask = FULL_MASK << (8 * tier);	// static const
 	auto mdid = did & ~mask;
 	auto r = mdid == bid;
 	return r;

@@ -98,9 +98,5 @@ namespace a {
 	public:
 		virtual ~D3();
 	};
-	class D4 : public C0, fdc::tag<D4> {
-	public:
-		virtual ~D4();
-	};
 
 }}
