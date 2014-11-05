@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\fdc.h" />
-    <ClInclude Include="..\fdc-hierarchy.h" />
     <ClInclude Include="..\fdc-inc.h" />
     <ClInclude Include="..\fdc-tag.h" />
     <ClInclude Include="..\test\a\a.h">
