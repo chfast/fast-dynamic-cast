@@ -3,21 +3,23 @@
 
 #include "../../fdc-tag.h"
 
+#include <chf/type_info.hpp>
+
 namespace fdctest {
 namespace a {
 
-	class Root : public fdc::root {
+	class Root : public fdc::root, public chf::type_info::root<Root> {
 	public:
 		virtual ~Root();
 	};
 
 
-	class A0 : public Root, fdc::tag<A0> {
+	class A0 : public Root, fdc::tag<A0>, chf::type_info::with<A0> {
 	public:
 		virtual ~A0();
 	};
 
-	class A1 : public Root, fdc::tag<A1> {
+	class A1 : public Root, fdc::tag<A1>, chf::type_info::with<A1> {
 	public:
 		virtual ~A1();
 	};
@@ -38,11 +40,11 @@ namespace a {
 	};
 
 
-	class B0 : public A0, fdc::tag<B0> {
+	class B0 : public A0, fdc::tag<B0>, chf::type_info::with<B0> {
 	public:
 		virtual ~B0();
 	};
-	class B1 : public A0, fdc::tag<B1> {
+	class B1 : public A0, fdc::tag<B1>, chf::type_info::with<B1> {
 	public:
 		virtual ~B1();
 	};

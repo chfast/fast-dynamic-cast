@@ -13,6 +13,12 @@
     <ClInclude Include="..\test\a\test.h">
       <Filter>test\a</Filter>
     </ClInclude>
+    <ClInclude Include="..\chf\type_info.hpp">
+      <Filter>chf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\chf\type_info\generator.hpp">
+      <Filter>chf\type_info</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source.cpp" />
@@ -26,6 +32,9 @@
       <Filter>test\a</Filter>
     </ClCompile>
     <ClCompile Include="..\typelists.cpp" />
+    <ClCompile Include="..\test\a\a-generator.cpp">
+      <Filter>test\a</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="test">
@@ -33,6 +42,12 @@
     </Filter>
     <Filter Include="test\a">
       <UniqueIdentifier>{092397e6-6c50-4e1a-8a6d-dd2a2244d971}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="chf">
+      <UniqueIdentifier>{a8f4bf60-8381-4ac3-ba1b-63cafe49fc82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="chf\type_info">
+      <UniqueIdentifier>{828a6b1f-202c-4bf6-8ad9-20163f2de048}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
