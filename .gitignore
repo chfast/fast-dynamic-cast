@@ -31,3 +31,4 @@ vcproj/Debug/*
 vcproj/*.sdf
 vcproj/*.opensdf
 
+vcproj/x64/
