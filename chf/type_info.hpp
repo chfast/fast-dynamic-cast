@@ -13,6 +13,8 @@ index_t get_class_index();
 template<typename T>
 struct root
 {
+	using root_class = T;
+
 	index_t class_index = 0;
 };
 
@@ -25,6 +27,15 @@ struct with
 		t->class_index = get_class_index<T>();
 	}
 };
+
+template<typename T>
+T* dyn_cast(typename const T::root_class*);
+
+template<typename DstT, typename SrcT>
+bool isa(SrcT const& obj)
+{
+	return dyn_cast<const DstT>(&obj) != nullptr;
+}
 
 }
 }

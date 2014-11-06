@@ -4,6 +4,8 @@
 #include "a-hierachy.h"
 #include "../../fdc.h"
 
+#include <chf/type_info.hpp>
+
 #include <stdexcept>
 #include <string>
 
@@ -26,6 +28,8 @@ void test()
 			throw std::runtime_error(#OBJECT " vs " #CLASS); \
 		} \
 	}
+
+	auto b = chf::type_info::isa<Root>(Root());
 
 	TEST(Root, Root);
 
