@@ -30,6 +30,7 @@ void test()
 	}
 
 	auto b = chf::type_info::isa<Root>(Root());
+	b = chf::type_info::isa<A0>(Root());
 
 	TEST(Root, Root);
 

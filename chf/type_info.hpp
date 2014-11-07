@@ -1,5 +1,9 @@
 #pragma once
 
+#include <type_traits>
+
+#define noexcept throw()
+
 namespace chf
 {
 namespace type_info
@@ -29,12 +33,32 @@ struct with
 };
 
 template<typename T>
-T* dyn_cast(typename const T::root_class*);
+bool isa_impl(typename const T::root_class*) noexcept;
+
+template<typename DstT, typename SrcT, bool always_true>
+bool isa_select(SrcT const& obj) noexcept
+{
+	static_assert(!always_true, "Specialization error");
+	return isa_impl<dst_type>(&obj);
+}
 
 template<typename DstT, typename SrcT>
-bool isa(SrcT const& obj)
+bool isa_select<true>(SrcT const& obj) noexcept
 {
-	return dyn_cast<const DstT>(&obj) != nullptr;
+	return true;
+}
+
+template<typename DstT, typename SrcT>
+bool isa(SrcT const& obj) noexcept
+{
+	static const auto always_true = std::is_base_of<DstT, SrcT>::value;
+	return isa_select<DstT, SrcT, always_true>(obj);
+}
+
+template<typename DstT, typename SrcT>
+DstT* dyn_cast(SrcT* obj) noexcept
+{
+	return isa_impl<DstT>(obj) ? static_cast<DstT*>(obj) : nullptr;
 }
 
 }

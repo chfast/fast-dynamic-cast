@@ -13,5 +13,11 @@ index_t get_class_index()
 	return 0;
 }
 
+template<typename T>
+bool isa_impl(typename const T::root_class*) noexcept
+{
+	return false;
+}
+
 }
 }

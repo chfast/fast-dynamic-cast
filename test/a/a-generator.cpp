@@ -9,6 +9,9 @@ template chf::type_info::index_t chf::type_info::get_class_index<fdctest::a::A1>
 template chf::type_info::index_t chf::type_info::get_class_index<fdctest::a::B0>();
 template chf::type_info::index_t chf::type_info::get_class_index<fdctest::a::B1>();
 
+
+template bool chf::type_info::isa_impl<fdctest::a::B1>(const fdctest::a::B1::root_class*);
+
 namespace fdctest {
 namespace a {
 
