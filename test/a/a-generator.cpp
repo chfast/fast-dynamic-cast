@@ -3,14 +3,36 @@
 
 #include "a.h"
 
-// Generate identifiers
-template chf::type_info::index_t chf::type_info::get_class_index<fdctest::a::A0>();
-template chf::type_info::index_t chf::type_info::get_class_index<fdctest::a::A1>();
-template chf::type_info::index_t chf::type_info::get_class_index<fdctest::a::B0>();
-template chf::type_info::index_t chf::type_info::get_class_index<fdctest::a::B1>();
+using namespace fdctest::a;
 
+#define TYPES Root, \
+A0, A1, A2, A3, A4, \
+B0, B1, B2, B3, B4, \
+C0, C1, C2, C3, C4, \
+D0, D1, D2, D3
 
-template bool chf::type_info::isa_impl<fdctest::a::B1>(const fdctest::a::B1::root_class*);
+template<typename T>
+struct chf::type_info::get_types {
+	using types = boost::mpl::vector<TYPES>::type;
+};
+
+template<typename T>
+void gen(T*)
+{
+	chf::type_info::get_class_index<T>();
+	chf::type_info::isa_impl<T>(nullptr);
+}
+
+template<typename... Types>
+void gen_all()
+{
+	std::initializer_list<int> {(gen(static_cast<Types*>(nullptr)), 0)...};
+}
+
+void ff()
+{
+	gen_all<TYPES>();
+}
 
 namespace fdctest {
 namespace a {

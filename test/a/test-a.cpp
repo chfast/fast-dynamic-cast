@@ -16,7 +16,7 @@ template<typename ObjectT, typename ClassT>
 bool tester()
 {
 	Root* ref = new ObjectT;
-	auto isa = fdc::isa<ClassT>(ref);
+	auto isa = chf::type_info::isa<ClassT>(*ref);
 	auto dyn = dynamic_cast<ClassT*>(ref) != nullptr;
 	return isa == dyn;
 }
@@ -29,8 +29,8 @@ void test()
 		} \
 	}
 
-	auto b = chf::type_info::isa<Root>(Root());
-	b = chf::type_info::isa<A0>(Root());
+	auto b = chf::type_info::isa<A0>(Root());
+	b = chf::type_info::isa<Root>(Root());
 
 	TEST(Root, Root);
 

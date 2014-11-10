@@ -35,24 +35,16 @@ struct with
 template<typename T>
 bool isa_impl(typename const T::root_class*) noexcept;
 
-template<typename DstT, typename SrcT, bool always_true>
-bool isa_select(SrcT const& obj) noexcept
+template<typename DstT, typename SrcT>
+auto isa(SrcT const& obj) noexcept -> typename std::enable_if<!std::is_base_of<DstT, SrcT>::value, bool>::type
 {
-	static_assert(!always_true, "Specialization error");
-	return isa_impl<dst_type>(&obj);
+	return isa_impl<DstT>(&obj);
 }
 
 template<typename DstT, typename SrcT>
-bool isa_select<true>(SrcT const& obj) noexcept
+auto isa(SrcT const& obj) noexcept -> typename std::enable_if<std::is_base_of<DstT, SrcT>::value, bool>::type
 {
 	return true;
-}
-
-template<typename DstT, typename SrcT>
-bool isa(SrcT const& obj) noexcept
-{
-	static const auto always_true = std::is_base_of<DstT, SrcT>::value;
-	return isa_select<DstT, SrcT, always_true>(obj);
 }
 
 template<typename DstT, typename SrcT>
