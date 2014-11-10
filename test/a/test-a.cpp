@@ -1,9 +1,6 @@
 
 #include "a.h"
 
-#include "a-hierachy.h"
-#include "../../fdc.h"
-
 #include <chf/type_info.hpp>
 
 #include <stdexcept>

@@ -143,7 +143,7 @@ bool isa_impl(typename const T::root_class* obj) noexcept
 	//if (did == bid)
 	//	return true;
 
-	static const uint64_t FULL_MASK = -1;
+	static const index_t FULL_MASK = -1;
 	auto mask = FULL_MASK << (8 * depth);	// static const
 	auto mdid = did & ~mask;
 	auto r = mdid == bid;
