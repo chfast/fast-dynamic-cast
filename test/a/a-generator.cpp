@@ -43,7 +43,9 @@ void test_gen()
 
 	using types = chf::type_info::get_types<void>::types;
 	using b1_base = chf::type_info::base<types, B1>::type;
+	using w = chf::type_info::base<types, Root>::type;
 
+	w* x = nullptr;
 	b1_base* a1b = nullptr;
 
 	a1b = nullptr;

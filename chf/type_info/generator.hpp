@@ -32,10 +32,17 @@ template<typename Types, typename T> struct bases
 	using type = typename mpl::copy_if<Types, is_strict_base_of<_1, T>, mpl::back_inserter<mpl::vector<>>>::type;
 };
 
+template<typename Types, typename T> struct base {
+	using _bases = typename  bases<Types, T>::type;
+	using iter = typename max_element<_bases, std::is_base_of<_1, _2>>::type;
+	using type = typename deref<iter>::type;
+
+	// TODO: What if already sorted by is_base_of
+	//using type = typename back<_bases>::type;
+};
+
 template<typename Types, typename T> struct is_root {
-	using _bases = typename bases<Types, T>::type;
-	using _size = typename size <_bases >::type;
-	static const bool value = _size::value == 0;
+	static const bool value = std::is_same<void_, typename base<Types, T>::type>::value;
 };
 
 template<typename Types> struct roots {
@@ -53,31 +60,16 @@ template<typename Types, typename T> struct dsubs {
 	using type = typename roots<_subs>::type;
 };
 
-template<typename Types, typename T> struct base {
-	using _bases = typename  bases<Types, T>::type;
-	using iter = typename max_element<_bases, std::is_base_of<_1, _2>>::type;
-	using type = typename deref<iter>::type;
-	
-	// TODO: What if already sorted by is_base_of
-	//using type = typename back<_bases>::type;
-};
-
-template<typename Types, typename T> struct level;
-
-template<typename Types, typename T, bool is_root> struct level_from_base {
-	using _base = typename type_info::base<Types, T>::type;
-	static const index_t _base_level = typename level<Types, _base>::value;
-	static const index_t value = _base_level + 1;
-};
-
-template<typename Types, typename T> struct level_from_base<Types, T, true> {
-	static const index_t value = 0;
-};
 
 template<typename Types, typename T> struct level {
-	static const bool _is_root = is_root<Types, T>::value;
-	static const index_t value = level_from_base<Types, T, _is_root>::value;
+	using _base = typename base<Types, T>::type;
+	static const index_t value = level<Types, _base>::value + 1;
 };
+
+template<typename Types> struct level<Types, void_> {
+	static const auto value = -1;
+};
+
 
 template<typename Types, typename T> struct child_index {
 	using _base = typename type_info::base<Types, T>::type;
