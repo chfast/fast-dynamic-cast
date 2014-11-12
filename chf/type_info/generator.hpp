@@ -30,7 +30,7 @@ using namespace mpl::placeholders;
 
 template<typename Types, typename T> struct bases
 {
-	using type = typename mpl::copy_if<Types, and_<not_<is_same<_1, T>>, typename std::is_base_of<_1, T>::type>, mpl::back_inserter<mpl::vector<>>>::type;
+	using type = typename mpl::copy_if<Types, and_<not_<is_same<_1, T>>, std::is_base_of<_1, T>>, mpl::back_inserter<mpl::vector<>>>::type;
 };
 
 template<typename Types, typename T> struct is_root {
@@ -47,7 +47,7 @@ template<typename Types> struct roots {
 
 template<typename Types, typename T> struct subs {
 	using type = typename
-		copy_if<Types, and_<not_<is_same<T, _1>>, typename std::is_base_of<T, _1>::type>, back_inserter<vector<>>>::type;
+		copy_if<Types, and_<not_<is_same<T, _1>>, std::is_base_of<T, _1>>, back_inserter<vector<>>>::type;
 };
 
 template<typename Types, typename T> struct dsubs {
