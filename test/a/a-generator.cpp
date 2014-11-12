@@ -1,5 +1,5 @@
 
-#include <chf/type_info/generator.hpp>
+#include <boost/mpl/vector.hpp>
 
 #include "a.h"
 
@@ -11,10 +11,9 @@ B0, B1, B2, B3, B4, \
 C0, C1, C2, C3, C4, \
 D0, D1, D2, D3
 
-template<typename T>
-struct chf::type_info::get_types {
-	using types = boost::mpl::vector<TYPES>::type;
-};
+using types = boost::mpl::vector<TYPES>::type;
+
+#include <chf/type_info/generator.hpp>
 
 template<typename T>
 void gen(T*)
@@ -29,7 +28,7 @@ void gen_all()
 	std::initializer_list<int> {(gen(static_cast<Types*>(nullptr)), 0)...};
 }
 
-void ff()
+void ff()	// TODO: Make this fake functions anonymous
 {
 	gen_all<TYPES>();
 }
@@ -37,5 +36,18 @@ void ff()
 namespace fdctest {
 namespace a {
 
+
+void test_gen()
+{
+	using b1_base = chf::type_info::base<B1>::type;
+	using w = chf::type_info::base<Root>::type;
+
+	w* x = nullptr;
+	b1_base* a1b = nullptr;
+
+	a1b = nullptr;
+
+	static_assert(std::is_same<A0, b1_base>::value, "");
+}
 
 }}
