@@ -1,18 +1,15 @@
 #pragma once
 
-#include <boost/mpl/list.hpp>
 #include <boost/mpl/copy_if.hpp>
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/map.hpp>
 #include <boost/mpl/insert.hpp>
-#include <boost/mpl/at.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/comparison.hpp>
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/find.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/mpl/max_element.hpp>
 
 #include <chf/type_info.hpp>
@@ -22,6 +19,12 @@ namespace chf
 namespace type_info
 {
 
+template<typename BaseT, typename DerT>
+struct is_strict_base_of
+{
+	static const bool value = !std::is_same<BaseT, DerT>::value && std::is_base_of<BaseT, DerT>::value;
+};
+
 
 using namespace boost;
 using namespace mpl;
@@ -29,7 +32,7 @@ using namespace mpl::placeholders;
 
 template<typename Types, typename T> struct bases
 {
-	using type = typename mpl::copy_if<Types, and_<not_<is_same<_1, T>>, std::is_base_of<_1, T>>, mpl::back_inserter<mpl::vector<>>>::type;
+	using type = typename mpl::copy_if<Types, is_strict_base_of<_1, T>, mpl::back_inserter<mpl::vector<>>>::type;
 };
 
 template<typename Types, typename T> struct is_root {
@@ -46,7 +49,7 @@ template<typename Types> struct roots {
 
 template<typename Types, typename T> struct subs {
 	using type = typename
-		copy_if<Types, and_<not_<is_same<T, _1>>, std::is_base_of<T, _1>>, back_inserter<vector<>>>::type;
+		copy_if<Types, is_strict_base_of<T, _1>, back_inserter<vector<>>>::type;
 };
 
 template<typename Types, typename T> struct dsubs {
