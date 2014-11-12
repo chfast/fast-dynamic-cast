@@ -10,7 +10,6 @@
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/front.hpp>
-#include <boost/type_traits.hpp>
 #include <boost/mpl/comparison.hpp>
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/contains.hpp>
@@ -29,7 +28,10 @@ using namespace boost;
 using namespace mpl;
 using namespace mpl::placeholders;
 
-template<typename Types, typename T> struct bases { using type = typename mpl::copy_if<Types, and_<not_<is_same<_1, T>>, is_base_of<_1, T>>, mpl::back_inserter<mpl::vector<>>>::type; };
+template<typename Types, typename T> struct bases
+{
+	using type = typename mpl::copy_if<Types, and_<not_<is_same<_1, T>>, std::is_base_of<_1, T>>, mpl::back_inserter<mpl::vector<>>>::type;
+};
 
 template<typename Types, typename T> struct is_root {
 	using _bases = typename bases<Types, T>::type;
@@ -45,7 +47,7 @@ template<typename Types> struct roots {
 
 template<typename Types, typename T> struct subs {
 	using type = typename
-		copy_if<Types, and_<not_<is_same<T, _1>>, is_base_of<T, _1>>, back_inserter<vector<>>>::type;
+		copy_if<Types, and_<not_<is_same<T, _1>>, std::is_base_of<T, _1>>, back_inserter<vector<>>>::type;
 };
 
 template<typename Types, typename T> struct dsubs {
