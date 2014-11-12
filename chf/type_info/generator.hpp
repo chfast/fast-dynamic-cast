@@ -134,19 +134,19 @@ index_t get_class_index()
 template<typename T>
 bool isa_impl(typename const T::root_class* obj) noexcept
 {
-	static const auto bid = class_info<T>::id;
+	static const auto dst_index = class_info<T>::id;
 	static const auto depth = class_info<T>::depth;
+	static const index_t FULL_MASK = -1;
+	static const auto mask = FULL_MASK << (8 * depth);
 
-	auto did = obj->class_index;
+	auto obj_index = obj->class_index;
 
 	// TODO: Optimization
 	//if (did == bid)
 	//	return true;
 
-	static const index_t FULL_MASK = -1;
-	auto mask = FULL_MASK << (8 * depth);	// static const
-	auto mdid = did & ~mask;
-	auto r = mdid == bid;
+	auto masked_index = obj_index & ~mask;
+	auto r = masked_index == dst_index;
 	return r;
 }
 
