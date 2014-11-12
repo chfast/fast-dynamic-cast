@@ -35,7 +35,7 @@ template<typename Types, typename T> struct bases
 template<typename Types, typename T> struct is_root {
 	using _bases = typename bases<Types, T>::type;
 	using _size = typename size <_bases >::type;
-	static const auto value = _size::value == 0;
+	static const bool value = _size::value == 0;
 };
 
 template<typename Types> struct roots {
@@ -66,34 +66,34 @@ template<typename Types, typename T> struct level;
 
 template<typename Types, typename T, bool is_root> struct level_from_base {
 	using _base = typename type_info::base<Types, T>::type;
-	static const auto _base_level = typename level<Types, _base>::value;
-	static const auto value = _base_level + 1;
+	static const index_t _base_level = typename level<Types, _base>::value;
+	static const index_t value = _base_level + 1;
 };
 
 template<typename Types, typename T> struct level_from_base<Types, T, true> {
-	static const auto value = 0;
+	static const index_t value = 0;
 };
 
 template<typename Types, typename T> struct level {
-	static const auto _is_root = is_root<Types, T>::value;
-	static const auto value = level_from_base<Types, T, _is_root>::value;
+	static const bool _is_root = is_root<Types, T>::value;
+	static const index_t value = level_from_base<Types, T, _is_root>::value;
 };
 
 template<typename Types, typename T> struct child_index {
 	using _base = typename type_info::base<Types, T>::type;
 	using _bros = typename dsubs<Types, _base>::type;
 	using _it = typename find<_bros, T>::type;
-	static const auto value = _it::pos::value;
+	static const index_t value = _it::pos::value;
 };
 
 template<typename Types, typename T> struct id;
 
 template<typename Types, typename T, bool is_root> struct id_impl {
-	static const auto _level = level<Types, T>::value;
+	static const index_t _level = level<Types, T>::value;
 	static_assert(_level != 0, "not specialization for root");
-	static const auto _index = child_index<Types, T>::value + 1;
+	static const index_t _index = child_index<Types, T>::value + 1;
 	using _base = typename type_info::base<Types, T>::type;
-	static const auto value = id<Types, _base>::value + (_index << (8 * (_level - 1)));
+	static const index_t value = id<Types, _base>::value + (_index << (8 * (_level - 1)));
 };
 
 template<typename Types, typename T> struct id_impl<Types, T, true> {
@@ -101,8 +101,8 @@ template<typename Types, typename T> struct id_impl<Types, T, true> {
 };
 
 template<typename Types, typename T> struct id {
-	static const auto _is_root = is_root<Types, T>::value;
-	static const auto value = id_impl<Types, T, _is_root>::value;
+	static const bool _is_root = is_root<Types, T>::value;
+	static const index_t value = id_impl<Types, T, _is_root>::value;
 };
 
 template<typename T>
