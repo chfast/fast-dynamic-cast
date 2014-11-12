@@ -16,26 +16,23 @@ namespace chf
 namespace type_info
 {
 
+using types = ::types;
+
 template<typename BaseT, typename DerT>
 struct is_strict_base_of
 {
 	static const bool value = !std::is_same<BaseT, DerT>::value && std::is_base_of<BaseT, DerT>::value;
 };
 
-
-template<typename T>
-struct get_types;
-
-
 using namespace boost::mpl;
 
-template<typename Types, typename T> struct bases
+template<typename T> struct bases
 {
-	using type = typename copy_if<Types, is_strict_base_of<_1, T>, back_inserter<vector<>>>::type;
+	using type = typename copy_if<types, is_strict_base_of<_1, T>, back_inserter<vector<>>>::type;
 };
 
-template<typename Types, typename T> struct base {
-	using _bases = typename  bases<Types, T>::type;
+template<typename T> struct base {
+	using _bases = typename bases<T>::type;
 	using iter = typename max_element<_bases, std::is_base_of<_1, _2>>::type;
 	using type = typename deref<iter>::type;
 
@@ -47,54 +44,53 @@ template<typename T> struct is_root {
 	static const bool value = std::is_same<T, typename T::root_class>::value;
 };
 
-template<typename Types, typename T0, typename T> struct is_bro
+template<typename T0, typename T> struct is_bro
 {
-	using _base0 = typename base<Types, T0>::type;
-	using _base = typename base<Types, T>::type;
+	using _base0 = typename base<T0>::type;
+	using _base = typename base<T>::type;
 	static const bool value = std::is_same<_base0, _base>::value;
 };
 
-template<typename Types, typename T> struct bros {
-	using type = typename copy_if<Types, is_bro<Types, T, _>, back_inserter<vector<>>>::type;
+template<typename T> struct bros {
+	using type = typename copy_if<types, is_bro<T, _>, back_inserter<vector<>>>::type;
 };
 
 
-template<typename Types, typename T> struct level {
-	static const index_t value = size<typename bases<Types, T>::type>::value;	// TODO: Use count_if
+template<typename T> struct level {
+	static const index_t value = size<typename bases<T>::type>::value;	// TODO: Use count_if
 };
 
 
-template<typename Types, typename T> struct child_index {
-	using _bros = typename bros<Types, T>::type;
+template<typename T> struct child_index {
+	using _bros = typename bros<T>::type;
 	using _it = typename find<_bros, T>::type;
 	static const index_t value = _it::pos::value;
 };
 
-template<typename Types, typename T> struct id;
+template<typename T> struct id;
 
-template<typename Types, typename T, bool is_root> struct id_impl {
-	static const index_t _level = level<Types, T>::value;
+template<typename T, bool is_root> struct id_impl {
+	static const index_t _level = level<T>::value;
 	static_assert(_level != 0, "not specialization for root");
-	static const index_t _index = child_index<Types, T>::value + 1;
-	using _base = typename type_info::base<Types, T>::type;
-	static const index_t value = id<Types, _base>::value + (_index << (8 * (_level - 1)));
+	static const index_t _index = child_index<T>::value + 1;
+	using _base = typename base<T>::type;
+	static const index_t value = id<_base>::value + (_index << (8 * (_level - 1)));
 };
 
-template<typename Types, typename T> struct id_impl<Types, T, true> {
+template<typename T> struct id_impl<T, true> {
 	static const index_t value = 0;
 };
 
-template<typename Types, typename T> struct id {
+template<typename T> struct id {
 	static const bool _is_root = is_root<T>::value;
-	static const index_t value = id_impl<Types, T, _is_root>::value;
+	static const index_t value = id_impl<T, _is_root>::value;
 };
 
 template<typename T>
 struct class_info
 {
-	using types = typename get_types<T>::types;
-	static const index_t id = id<types, T>::value;
-	static const index_t depth = level<types, T>::value;
+	static const index_t id = id<T>::value;
+	static const index_t depth = level<T>::value;
 };
 
 template<typename T>
