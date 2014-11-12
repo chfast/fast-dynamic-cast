@@ -62,12 +62,7 @@ template<typename Types, typename T> struct dsubs {
 
 
 template<typename Types, typename T> struct level {
-	using _base = typename base<Types, T>::type;
-	static const index_t value = level<Types, _base>::value + 1;
-};
-
-template<typename Types> struct level<Types, void_> {
-	static const auto value = -1;
+	static const index_t value = size<typename bases<Types, T>::type>::value;	// TODO: Use count_if
 };
 
 
