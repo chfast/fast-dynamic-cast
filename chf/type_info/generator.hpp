@@ -3,11 +3,8 @@
 #include <boost/mpl/copy_if.hpp>
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/map.hpp>
 #include <boost/mpl/insert.hpp>
 #include <boost/mpl/size.hpp>
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/comparison.hpp>
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/find.hpp>
 #include <boost/mpl/max_element.hpp>
@@ -38,8 +35,7 @@ template<typename Types, typename T> struct bases
 template<typename Types, typename T> struct is_root {
 	using _bases = typename bases<Types, T>::type;
 	using _size = typename size <_bases >::type;
-	using type = typename equal_to<_size, int_<0>>::type;
-	static const auto value = type::value;
+	static const auto value = _size::value == 0;
 };
 
 template<typename Types> struct roots {
