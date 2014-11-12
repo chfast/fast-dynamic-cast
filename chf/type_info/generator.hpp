@@ -41,23 +41,19 @@ template<typename Types, typename T> struct base {
 	//using type = typename back<_bases>::type;
 };
 
-template<typename Types, typename T> struct is_root {
-	static const bool value = std::is_same<void_, typename base<Types, T>::type>::value;
+template<typename T> struct is_root {
+	static const bool value = std::is_same<T, typename T::root_class>::value;
 };
 
-template<typename Types> struct roots {
-	using type = typename
-		mpl::copy_if<Types, is_root<Types, _1>, back_inserter<vector<>>>::type;
+template<typename Types, typename T0, typename T> struct is_bro
+{
+	using _base0 = typename base<Types, T0>::type;
+	using _base = typename base<Types, T>::type;
+	static const bool value = std::is_same<_base0, _base>::value;
 };
 
-template<typename Types, typename T> struct subs {
-	using type = typename
-		copy_if<Types, is_strict_base_of<T, _1>, back_inserter<vector<>>>::type;
-};
-
-template<typename Types, typename T> struct dsubs {
-	using _subs = typename subs<Types, T>::type;
-	using type = typename roots<_subs>::type;
+template<typename Types, typename T> struct bros {
+	using type = typename copy_if<Types, is_bro<Types, T, _>, back_inserter<vector<>>>::type;
 };
 
 
@@ -67,8 +63,7 @@ template<typename Types, typename T> struct level {
 
 
 template<typename Types, typename T> struct child_index {
-	using _base = typename type_info::base<Types, T>::type;
-	using _bros = typename dsubs<Types, _base>::type;
+	using _bros = typename bros<Types, T>::type;
 	using _it = typename find<_bros, T>::type;
 	static const index_t value = _it::pos::value;
 };
@@ -88,7 +83,7 @@ template<typename Types, typename T> struct id_impl<Types, T, true> {
 };
 
 template<typename Types, typename T> struct id {
-	static const bool _is_root = is_root<Types, T>::value;
+	static const bool _is_root = is_root<T>::value;
 	static const index_t value = id_impl<Types, T, _is_root>::value;
 };
 
