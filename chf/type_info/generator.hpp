@@ -23,13 +23,15 @@ struct is_strict_base_of
 };
 
 
-using namespace boost;
-using namespace mpl;
-using namespace mpl::placeholders;
+template<typename T>
+struct get_types;
+
+
+using namespace boost::mpl;
 
 template<typename Types, typename T> struct bases
 {
-	using type = typename mpl::copy_if<Types, is_strict_base_of<_1, T>, mpl::back_inserter<mpl::vector<>>>::type;
+	using type = typename copy_if<Types, is_strict_base_of<_1, T>, back_inserter<vector<>>>::type;
 };
 
 template<typename Types, typename T> struct base {
@@ -86,9 +88,6 @@ template<typename Types, typename T> struct id {
 	static const bool _is_root = is_root<T>::value;
 	static const index_t value = id_impl<Types, T, _is_root>::value;
 };
-
-template<typename T>
-struct get_types;
 
 template<typename T>
 struct class_info
