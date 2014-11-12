@@ -6,15 +6,14 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/map.hpp>
 #include <boost/mpl/insert.hpp>
-#include <boost/mpl/set.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/comparison.hpp>
 #include <boost/mpl/find_if.hpp>
-#include <boost/mpl/contains.hpp>
+#include <boost/mpl/find.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/order.hpp>
+#include <boost/mpl/max_element.hpp>
 
 #include <chf/type_info.hpp>
 
@@ -55,15 +54,13 @@ template<typename Types, typename T> struct dsubs {
 	using type = typename roots<_subs>::type;
 };
 
-template<typename Types, typename T> struct dsubs_set {
-	using _dsubs = typename dsubs<Types, T>::type;
-	using type = typename fold<_dsubs, set<>, insert<_1, begin<_1>, _2>>::type;
-};
-
 template<typename Types, typename T> struct base {
 	using _bases = typename  bases<Types, T>::type;
-	using iter = typename find_if <_bases, contains<dsubs_set<Types, _1>, T> >::type;
+	using iter = typename max_element<_bases, std::is_base_of<_1, _2>>::type;
 	using type = typename deref<iter>::type;
+	
+	// TODO: What if already sorted by is_base_of
+	//using type = typename back<_bases>::type;
 };
 
 template<typename Types, typename T> struct level;
@@ -81,12 +78,6 @@ template<typename Types, typename T> struct level_from_base<Types, T, true> {
 template<typename Types, typename T> struct level {
 	static const auto _is_root = is_root<Types, T>::value;
 	static const auto value = level_from_base<Types, T, _is_root>::value;
-};
-
-template<typename Types, typename T> struct child_order {
-	using _base = typename type_info::base<Types, T>::type;
-	using _bros = typename dsubs_set<Types, _base>::type;
-	static const auto value = order<_bros, T>::value;
 };
 
 template<typename Types, typename T> struct child_index {

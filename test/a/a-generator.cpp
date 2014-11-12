@@ -29,7 +29,7 @@ void gen_all()
 	std::initializer_list<int> {(gen(static_cast<Types*>(nullptr)), 0)...};
 }
 
-void ff()
+void ff()	// TODO: Make this fake functions anonymous
 {
 	gen_all<TYPES>();
 }
@@ -37,5 +37,18 @@ void ff()
 namespace fdctest {
 namespace a {
 
+
+void test_gen()
+{
+
+	using types = chf::type_info::get_types<void>::types;
+	using b1_base = chf::type_info::base<types, B1>::type;
+
+	b1_base* a1b = nullptr;
+
+	a1b = nullptr;
+
+	static_assert(std::is_same<A0, b1_base>::value, "");
+}
 
 }}

@@ -18,6 +18,8 @@ bool tester()
 	return isa == dyn;
 }
 
+void test_gen();
+
 void test()
 {
 	#define TEST(OBJECT, CLASS) { \
@@ -25,6 +27,8 @@ void test()
 			throw std::runtime_error(#OBJECT " vs " #CLASS); \
 		} \
 	}
+
+	test_gen();
 
 	auto b = chf::type_info::isa<A0>(Root());
 	b = chf::type_info::isa<Root>(Root());
