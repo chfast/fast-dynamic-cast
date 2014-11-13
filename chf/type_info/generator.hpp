@@ -8,9 +8,12 @@ namespace chf
 namespace type_info
 {
 
+// TODO Diagnostics: Root class cannot be on the list
+// TODO Diagnostics: Only classes can be on list
+// TODO Diagnostics: Unique types
+
 template<typename BaseT, typename DerT> struct is_strict_base_of
     : std::integral_constant<bool, !std::is_same<BaseT, DerT>::value && std::is_base_of<BaseT, DerT>::value> {};
-
 
 template<typename DerT, typename...> struct base2 { using type = void; };
 
@@ -24,11 +27,6 @@ template<typename DerT, typename T, typename... Ts> struct base2<DerT, typelist<
 
 template<typename T> struct base
     : base2<T, tlist> {}; // TODO: What if already sorted by is_base_of
-
-
-template<typename T> struct is_root {
-	static const bool value = std::is_same<T, typename T::root_class>::value;
-};
 
 template<typename T0, typename T> struct is_bro
 {
@@ -64,30 +62,23 @@ template<typename T> struct child_index
     : child_idx<0, T, tlist> {};
 
 
-template<typename T> struct id;
-
-template<typename T, bool is_root> struct id_impl {
+template<typename T> struct index {
 	static const index_t _level = depth<T>::value;
 	static_assert(_level != 0, "not specialization for root");
 	static const index_t _index = child_index<T>::value + 1;
 	using _base = typename base<T>::type;
-	static const index_t value = id<_base>::value + (_index << (8 * (_level - 1)));
+	static const index_t value = index<_base>::value + (_index << (8 * (_level - 1)));
 };
 
-template<typename T> struct id_impl<T, true> {
+template<> struct index<void> {
 	static const index_t value = 0;
-};
-
-template<typename T> struct id {
-	static const bool _is_root = is_root<T>::value;
-	static const index_t value = id_impl<T, _is_root>::value;
 };
 
 
 template<typename T>
 struct class_info
 {
-	static const index_t id = id<T>::value;
+	static const index_t id = index<T>::value;
 };
 
 template<typename T>

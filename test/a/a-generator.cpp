@@ -5,7 +5,7 @@
 
 using namespace fdctest::a;
 
-#define TYPES Root, \
+#define TYPES \
 A0, A1, A2, A3, A4, \
 B0, B1, B2, B3, B4, \
 C0, C1, C2, C3, C4, \
@@ -44,7 +44,7 @@ namespace a {
 void test_gen()
 {
     using b1 = chf::type_info::base2<A0, tlist>::type;
-    static_assert(std::is_same<b1, Root>::value, "");
+    static_assert(std::is_same<b1, void>::value, "");
 
     using b2 = chf::type_info::base2<C1, tlist>::type;
     static_assert(std::is_same<b2, B0>::value, "");
