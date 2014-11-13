@@ -1,5 +1,6 @@
 
 #include <boost/mpl/vector.hpp>
+#include <chf/type_list.hpp>
 
 #include "a.h"
 
@@ -11,7 +12,7 @@ B0, B1, B2, B3, B4, \
 C0, C1, C2, C3, C4, \
 D0, D1, D2, D3
 
-using types = boost::mpl::vector<TYPES>::type;
+using tlist = chf::typelist<TYPES>;
 
 #include <chf/type_info/generator.hpp>
 
@@ -48,6 +49,15 @@ void test_gen()
 	b1_base* a1b = nullptr;
 
 	a1b = nullptr;
+
+    using a = chf::type_info::bases_impl<Root, tlist>::type;
+    static_assert(std::is_same<a, chf::typelist<>>::value, "");
+
+    using b = chf::type_info::bases_impl<A0, tlist>::type;
+    static_assert(std::is_same<b, chf::typelist<Root>>::value, "");
+
+    using c = chf::type_info::bases_impl<B1, tlist>::type;
+    static_assert(std::is_same<c, chf::typelist<Root, A0>>::value, "");
 
 	static_assert(std::is_same<A0, b1_base>::value, "");
 }

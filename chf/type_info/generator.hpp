@@ -10,13 +10,17 @@
 #include <boost/mpl/max_element.hpp>
 
 #include <chf/type_info.hpp>
+#include <chf/type_list.hpp>
 
 namespace chf
 {
 namespace type_info
 {
 
-using types = ::types;
+template<typename> struct typelist2vector {};
+
+template<typename... Ts> struct typelist2vector<chf::typelist<Ts...>>
+    : boost::mpl::vector<Ts...> {};
 
 template<typename BaseT, typename DerT>
 struct is_strict_base_of
@@ -24,11 +28,29 @@ struct is_strict_base_of
 	static const bool value = !std::is_same<BaseT, DerT>::value && std::is_base_of<BaseT, DerT>::value;
 };
 
+using types = typelist2vector<tlist>::type;
+
 using namespace boost::mpl;
+
+template<typename DerT, typename...> struct bases_impl
+{
+    using type = typelist<>;
+};
+
+template<typename DerT, typename T, typename... Ts> struct bases_impl<DerT, typelist<T, Ts...>>
+{
+    static const bool _is = is_strict_base_of<T, DerT>::value;
+    using _tail = typename bases_impl<DerT, typelist<Ts...>>::type;
+    using _cat = typename cat<T, _tail>::type;
+    using type = typename std::conditional<_is, _cat, _tail>::type;
+};
 
 template<typename T> struct bases
 {
-	using type = typename copy_if<types, is_strict_base_of<_1, T>, back_inserter<vector<>>>::type;
+	//using type = typename copy_if<types, is_strict_base_of<_1, T>, back_inserter<vector<>>>::type;
+
+    using _bases = typename bases_impl<T, tlist>::type;
+    using type = typename typelist2vector<_bases>::type;
 };
 
 template<typename T> struct base {

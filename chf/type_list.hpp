@@ -6,6 +6,17 @@
 namespace chf
 {
 
+template<typename... Ts> struct typelist {};
+
+template<typename...> struct cat;
+
+template<typename T, typename... Ts> struct cat<T, typelist<Ts...>>
+{
+    using type = typelist<T, Ts...>;
+};
+
+
+
 template<typename... Ts> struct count_if
     : std::integral_constant<int, 0> {};
 
