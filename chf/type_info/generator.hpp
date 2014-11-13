@@ -1,14 +1,5 @@
 #pragma once
 
-#include <boost/mpl/copy_if.hpp>
-#include <boost/mpl/back_inserter.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/insert.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/find_if.hpp>
-#include <boost/mpl/find.hpp>
-#include <boost/mpl/max_element.hpp>
-
 #include <chf/type_info.hpp>
 #include <chf/type_list.hpp>
 
@@ -17,20 +8,12 @@ namespace chf
 namespace type_info
 {
 
-template<typename> struct typelist2vector {};
-
-template<typename... Ts> struct typelist2vector<chf::typelist<Ts...>>
-    : boost::mpl::vector<Ts...> {};
-
 template<typename BaseT, typename DerT>
 struct is_strict_base_of
 {
 	static const bool value = !std::is_same<BaseT, DerT>::value && std::is_base_of<BaseT, DerT>::value;
 };
 
-using types = typelist2vector<tlist>::type;
-
-using namespace boost::mpl;
 
 template<typename DerT, typename...> struct bases_impl
 {
@@ -48,8 +31,8 @@ template<typename DerT, typename T, typename... Ts> struct bases_impl<DerT, type
 template<typename T> struct bases
     : bases_impl<T, tlist> {};
 
-template<typename T> struct bases_mpl
-    : typelist2vector<typename bases<T>::type> {};
+//template<typename T> struct bases_mpl
+ //   : typelist2vector<typename bases<T>::type> {};
 
 template<typename DerT, typename...> struct base2 { using type = void; };
 
@@ -83,19 +66,39 @@ template<typename T0, typename T> struct is_bro
 	static const bool value = std::is_same<_base0, _base>::value;
 };
 
-template<typename T> struct bros {
-	using type = typename copy_if<types, is_bro<T, _>, back_inserter<vector<>>>::type;
-};
-
-
 template<typename T> struct level
     : tl_size<typename bases<T>::type> {}; // TODO: Use count_if
 
 
+
+//template<typename T> struct bros {
+//	using type = typename copy_if<types, is_bro<T, _>, back_inserter<vector<>>>::type;
+//};
+
+
+template<index_t idx, typename ChildT, typename...> struct child_idx
+{
+    static const index_t value = -1;
+};
+
+template<index_t idx, typename ChildT, typename T, typename... Ts> struct child_idx<idx, ChildT, typelist<T, Ts...>>
+{
+    static const bool _its_me = std::is_same<ChildT, T>::value;
+    using _base = typename base<ChildT>::type;
+    using _bro_base = typename base<T>::type;
+    static const bool _is_bro = std::is_same<_base, _bro_base>::value;
+    static const index_t curr_idx = idx + _is_bro;
+    static const index_t value = _its_me ? idx : child_idx<curr_idx, ChildT, typelist<Ts...>>::value;   // TODO: Use integra_constant here
+};
+
+
+
 template<typename T> struct child_index {
-	using _bros = typename bros<T>::type;
-	using _it = typename find<_bros, T>::type;
-	static const index_t value = _it::pos::value;
+	//using _bros = typename bros<T>::type;
+	//using _it = typename find<_bros, T>::type;
+    //static const index_t value = _it::pos::value;
+    static const index_t value = child_idx<0, T, tlist>::value;
+
 };
 
 template<typename T> struct id;

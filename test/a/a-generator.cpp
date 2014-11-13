@@ -1,5 +1,4 @@
 
-#include <boost/mpl/vector.hpp>
 #include <chf/type_list.hpp>
 
 #include "a.h"
