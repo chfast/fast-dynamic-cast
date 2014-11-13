@@ -1,6 +1,3 @@
-
-#include <chf/type_list.hpp>
-
 #include "a.h"
 
 using namespace fdctest::a;
@@ -13,11 +10,8 @@ D0, D1, D2, D3, D4, \
 E0, E1, E2, E3, E4, \
 F0, F1, F2, F3, F4
 
-using tlist = chf::typelist<TYPES>;
 
 #include <chf/type_info/generator.hpp>
-
-#include <chf/type_list.hpp>
 
 template<typename T>
 void gen(T*)
@@ -43,10 +37,10 @@ namespace a {
 
 void test_gen()
 {
-    using b1 = chf::type_info::base2<A0, tlist>::type;
+	using b1 = chf::type_info::base2<A0, TYPES>::type;
     static_assert(std::is_same<b1, void>::value, "");
 
-    using b2 = chf::type_info::base2<C1, tlist>::type;
+    using b2 = chf::type_info::base2<C1, TYPES>::type;
     static_assert(std::is_same<b2, B0>::value, "");
 }
 

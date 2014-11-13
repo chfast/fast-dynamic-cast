@@ -13,9 +13,6 @@
     <ClInclude Include="..\chf\type_info\generator.hpp">
       <Filter>chf\type_info</Filter>
     </ClInclude>
-    <ClInclude Include="..\chf\type_list.hpp">
-      <Filter>chf</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source.cpp" />
