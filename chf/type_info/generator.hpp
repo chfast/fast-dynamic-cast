@@ -38,10 +38,10 @@ template<typename T0, typename T> struct is_bro
 };
 
 
-template<typename T> struct level
-	: std::integral_constant<index_t, level<typename base<T>::type>::value + 1> {};
+template<typename T> struct depth
+	: std::integral_constant<index_t, depth<typename base<T>::type>::value + 1> {};
 
-template<> struct level<void>
+template<> struct depth<void>
 	: std::integral_constant<index_t, 0> {};
 
 
@@ -67,7 +67,7 @@ template<typename T> struct child_index
 template<typename T> struct id;
 
 template<typename T, bool is_root> struct id_impl {
-	static const index_t _level = level<T>::value;
+	static const index_t _level = depth<T>::value;
 	static_assert(_level != 0, "not specialization for root");
 	static const index_t _index = child_index<T>::value + 1;
 	using _base = typename base<T>::type;
@@ -88,7 +88,6 @@ template<typename T>
 struct class_info
 {
 	static const index_t id = id<T>::value;
-	static const index_t depth = level<T>::value;
 };
 
 template<typename T>
@@ -102,9 +101,8 @@ template<typename T>
 bool isa_impl(typename const T::root_class* obj) noexcept
 {
 	static const auto dst_index = class_info<T>::id;
-	static const auto depth = class_info<T>::depth;
 	static const index_t FULL_MASK = -1;
-	static const auto mask = FULL_MASK << (8 * depth);
+	static const auto mask = FULL_MASK << (8 * depth<T>::value);
 
 	auto obj_index = obj->class_index;
 
