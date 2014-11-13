@@ -42,13 +42,11 @@ namespace a {
 
 void test_gen()
 {
-	using b1_base = chf::type_info::base<B1>::type;
-	using w = chf::type_info::base<Root>::type;
+    using b1 = chf::type_info::base2<A0, tlist>::type;
+    static_assert(std::is_same<b1, Root>::value, "");
 
-	w* x = nullptr;
-	b1_base* a1b = nullptr;
-
-	a1b = nullptr;
+    using b2 = chf::type_info::base2<C1, tlist>::type;
+    static_assert(std::is_same<b2, B0>::value, "");
 
     using a = chf::type_info::bases_impl<Root, tlist>::type;
     static_assert(std::is_same<a, chf::typelist<>>::value, "");
@@ -58,8 +56,6 @@ void test_gen()
 
     using c = chf::type_info::bases_impl<B1, tlist>::type;
     static_assert(std::is_same<c, chf::typelist<Root, A0>>::value, "");
-
-	static_assert(std::is_same<A0, b1_base>::value, "");
 }
 
 }}

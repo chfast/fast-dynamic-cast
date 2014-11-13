@@ -51,10 +51,22 @@ template<typename T> struct bases
 template<typename T> struct bases_mpl
     : typelist2vector<typename bases<T>::type> {};
 
+template<typename DerT, typename...> struct base2 { using type = void; };
+
+template<typename DerT, typename T, typename... Ts> struct base2<DerT, typelist<T, Ts...>>
+{
+    using _tail = typename base2<DerT, typelist<Ts...>>::type;
+    static const bool _is_base = is_strict_base_of<T, DerT>::value;
+    static const bool _tail_better = !_is_base || is_strict_base_of<T, _tail>::value;
+    using type = typename std::conditional<_tail_better, _tail, T>::type;
+};
+
 template<typename T> struct base {
-    using _bases = typename bases_mpl<T>::type;
-	using iter = typename max_element<_bases, std::is_base_of<_1, _2>>::type;
-	using type = typename deref<iter>::type;
+    //using _bases = typename bases_mpl<T>::type;
+	//using iter = typename max_element<_bases, is_strict_base_of<_1, _2>>::type;
+	//using type = typename deref<iter>::type;
+
+    using type = typename base2<T, tlist>::type;
 
 	// TODO: What if already sorted by is_base_of
 	//using type = typename back<_bases>::type;
