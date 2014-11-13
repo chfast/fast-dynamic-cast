@@ -46,15 +46,13 @@ template<typename DerT, typename T, typename... Ts> struct bases_impl<DerT, type
 };
 
 template<typename T> struct bases
-{
-	//using type = typename copy_if<types, is_strict_base_of<_1, T>, back_inserter<vector<>>>::type;
+    : bases_impl<T, tlist> {};
 
-    using _bases = typename bases_impl<T, tlist>::type;
-    using type = typename typelist2vector<_bases>::type;
-};
+template<typename T> struct bases_mpl
+    : typelist2vector<typename bases<T>::type> {};
 
 template<typename T> struct base {
-	using _bases = typename bases<T>::type;
+    using _bases = typename bases_mpl<T>::type;
 	using iter = typename max_element<_bases, std::is_base_of<_1, _2>>::type;
 	using type = typename deref<iter>::type;
 
@@ -78,9 +76,8 @@ template<typename T> struct bros {
 };
 
 
-template<typename T> struct level {
-	static const index_t value = size<typename bases<T>::type>::value;	// TODO: Use count_if
-};
+template<typename T> struct level
+    : tl_size<typename bases<T>::type> {}; // TODO: Use count_if
 
 
 template<typename T> struct child_index {

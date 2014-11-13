@@ -15,6 +15,12 @@ template<typename T, typename... Ts> struct cat<T, typelist<Ts...>>
     using type = typelist<T, Ts...>;
 };
 
+template<typename...> struct tl_size;
+
+
+template<typename... Ts> struct tl_size<typelist<Ts...>>
+    : std::integral_constant<size_t, sizeof...(Ts)> {};
+
 
 
 template<typename... Ts> struct count_if
