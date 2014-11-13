@@ -48,15 +48,6 @@ void test_gen()
 
     using b2 = chf::type_info::base2<C1, tlist>::type;
     static_assert(std::is_same<b2, B0>::value, "");
-
-    using a = chf::type_info::bases_impl<Root, tlist>::type;
-    static_assert(std::is_same<a, chf::typelist<>>::value, "");
-
-    using b = chf::type_info::bases_impl<A0, tlist>::type;
-    static_assert(std::is_same<b, chf::typelist<Root>>::value, "");
-
-    using c = chf::type_info::bases_impl<B1, tlist>::type;
-    static_assert(std::is_same<c, chf::typelist<Root, A0>>::value, "");
 }
 
 }}

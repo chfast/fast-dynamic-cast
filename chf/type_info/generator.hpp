@@ -12,23 +12,6 @@ template<typename BaseT, typename DerT> struct is_strict_base_of
     : std::integral_constant<bool, !std::is_same<BaseT, DerT>::value && std::is_base_of<BaseT, DerT>::value> {};
 
 
-template<typename DerT, typename...> struct bases_impl
-{
-    using type = typelist<>;
-};
-
-template<typename DerT, typename T, typename... Ts> struct bases_impl<DerT, typelist<T, Ts...>>
-{
-    static const bool _is = is_strict_base_of<T, DerT>::value;
-    using _tail = typename bases_impl<DerT, typelist<Ts...>>::type;
-    using _cat = typename cat<T, _tail>::type;
-    using type = typename std::conditional<_is, _cat, _tail>::type;
-};
-
-template<typename T> struct bases
-    : bases_impl<T, tlist> {};
-
-
 template<typename DerT, typename...> struct base2 { using type = void; };
 
 template<typename DerT, typename T, typename... Ts> struct base2<DerT, typelist<T, Ts...>>
@@ -54,8 +37,12 @@ template<typename T0, typename T> struct is_bro
 	static const bool value = std::is_same<_base0, _base>::value;
 };
 
+
 template<typename T> struct level
-    : size<typename bases<T>::type> {}; // TODO: Use count_if
+	: std::integral_constant<index_t, level<typename base<T>::type>::value + 1> {};
+
+template<> struct level<void>
+	: std::integral_constant<index_t, 0> {};
 
 
 template<index_t idx, typename ChildT, typename...> struct child_idx
