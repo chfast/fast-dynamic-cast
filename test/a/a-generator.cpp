@@ -32,10 +32,7 @@ void gen_all()
 	std::initializer_list<int> {(gen(static_cast<Types*>(nullptr)), 0)...};
 }
 
-void ff()	// TODO: Make this fake functions anonymous
-{
-	gen_all<TYPES>();
-}
+template void gen_all<TYPES>();
 
 namespace fdctest {
 namespace a {
