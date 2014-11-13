@@ -15,6 +15,8 @@ using types = boost::mpl::vector<TYPES>::type;
 
 #include <chf/type_info/generator.hpp>
 
+#include <chf/type_list.hpp>
+
 template<typename T>
 void gen(T*)
 {

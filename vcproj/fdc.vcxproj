@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="..\chf\type_info.hpp" />
     <ClInclude Include="..\chf\type_info\generator.hpp" />
+    <ClInclude Include="..\chf\type_list.hpp" />
     <ClInclude Include="..\test\a\a.h" />
     <ClInclude Include="..\test\a\test.h" />
   </ItemGroup>
