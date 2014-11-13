@@ -8,95 +8,43 @@ namespace a {
 
 	class Root : public chf::type_info::root<Root> {
 	public:
-		virtual ~Root();
+        virtual ~Root() = default;
 	};
 
+	class A0 : public Root, chf::type_info::with<A0> {};
+	class A1 : public Root, chf::type_info::with<A1> {};
+	class A2 : public Root, chf::type_info::with<A2> {};
+	class A3 : public Root, chf::type_info::with<A3> {};
+	class A4 : public Root, chf::type_info::with<A4> {};
 
-	class A0 : public Root, chf::type_info::with<A0> {
-	public:
-		virtual ~A0();
-	};
+	class B0 : public A0, chf::type_info::with<B0> {};
+	class B1 : public A0, chf::type_info::with<B1> {};
+	class B2 : public A0, chf::type_info::with<B2> {};
+	class B3 : public A0, chf::type_info::with<B3> {};
+	class B4 : public A0, chf::type_info::with<B4> {};
 
-	class A1 : public Root, chf::type_info::with<A1> {
-	public:
-		virtual ~A1();
-	};
+	class C0 : public B0, chf::type_info::with<C0> {};
+	class C1 : public B0, chf::type_info::with<C1> {};
+	class C2 : public B0, chf::type_info::with<C2> {};
+	class C3 : public B0, chf::type_info::with<C3> {};
+    class C4 : public B0, chf::type_info::with<C4> {};
 
-	class A2 : public Root, chf::type_info::with<A2> {
-	public:
-		virtual ~A2();
-	};
+    class D0 : public C0, chf::type_info::with<D0> {};
+    class D1 : public C0, chf::type_info::with<D1> {};
+    class D2 : public C0, chf::type_info::with<D2> {};
+    class D3 : public C0, chf::type_info::with<D3> {};
+    class D4 : public C0, chf::type_info::with<D4> {};
 
-	class A3 : public Root, chf::type_info::with<A3> {
-	public:
-		virtual ~A3();
-	};
+    class E0 : public D0, chf::type_info::with<E0> {};
+    class E1 : public D0, chf::type_info::with<E1> {};
+    class E2 : public D0, chf::type_info::with<E2> {};
+    class E3 : public D0, chf::type_info::with<E3> {};
+    class E4 : public D0, chf::type_info::with<E4> {};
 
-	class A4 : public Root, chf::type_info::with<A4> {
-	public:
-		virtual ~A4();
-	};
-
-
-	class B0 : public A0, chf::type_info::with<B0> {
-	public:
-		virtual ~B0();
-	};
-	class B1 : public A0, chf::type_info::with<B1> {
-	public:
-		virtual ~B1();
-	};
-	class B2 : public A0, chf::type_info::with<B2> {
-	public:
-		virtual ~B2();
-	};
-	class B3 : public A0, chf::type_info::with<B3> {
-	public:
-		virtual ~B3();
-	};
-	class B4 : public A0, chf::type_info::with<B4> {
-	public:
-		virtual ~B4();
-	};
-
-
-	class C0 : public B0, chf::type_info::with<C0> {
-	public:
-		virtual ~C0();
-	};
-	class C1 : public B0, chf::type_info::with<C1> {
-	public:
-		virtual ~C1();
-	};
-	class C2 : public B0, chf::type_info::with<C2> {
-	public:
-		virtual ~C2();
-	};
-	class C3 : public B0, chf::type_info::with<C3> {
-	public:
-		virtual ~C3();
-	};
-	class C4 : public B0, chf::type_info::with<C4> {
-	public:
-		virtual ~C4();
-	};
-
-
-	class D0 : public C0, chf::type_info::with<D0> {
-	public:
-		virtual ~D0();
-	};
-	class D1 : public C0, chf::type_info::with<D1> {
-	public:
-		virtual ~D1();
-	};
-	class D2 : public C0, chf::type_info::with<D2> {
-	public:
-		virtual ~D2();
-	};
-	class D3 : public C0, chf::type_info::with<D3> {
-	public:
-		virtual ~D3();
-	};
+    class F0 : public E0, chf::type_info::with<F0> {};
+    class F1 : public E0, chf::type_info::with<F1> {};
+    class F2 : public E0, chf::type_info::with<F2> {};
+    class F3 : public E0, chf::type_info::with<F3> {};
+    class F4 : public E0, chf::type_info::with<F4> {};
 
 }}

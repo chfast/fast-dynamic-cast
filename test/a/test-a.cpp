@@ -33,7 +33,7 @@ void test()
 	auto b = chf::type_info::isa<A0>(Root());
 	b = chf::type_info::isa<Root>(Root());
 
-	TEST(Root, Root);
+	TEST(Root, Root);   // TODO: Create template test generation 
 
 	TEST(A0, Root);
 	TEST(A1, Root);
@@ -56,7 +56,8 @@ void test()
 	TEST(D0, Root);
 	TEST(D1, Root);
 	TEST(D2, Root);
-	TEST(D3, Root);
+    TEST(D3, Root);
+    TEST(D4, Root);
 
 	TEST(A0, A0);
 	TEST(A1, A0);
@@ -148,7 +149,8 @@ void test()
 	TEST(D0, D0);
 	TEST(D1, D0);
 	TEST(D2, D0);
-	TEST(D3, D0);
+    TEST(D3, D0);
+    TEST(D4, D0);
 }
 
 

@@ -8,11 +8,8 @@ namespace chf
 namespace type_info
 {
 
-template<typename BaseT, typename DerT>
-struct is_strict_base_of
-{
-	static const bool value = !std::is_same<BaseT, DerT>::value && std::is_base_of<BaseT, DerT>::value;
-};
+template<typename BaseT, typename DerT> struct is_strict_base_of
+    : std::integral_constant<bool, !std::is_same<BaseT, DerT>::value && std::is_base_of<BaseT, DerT>::value> {};
 
 
 template<typename DerT, typename...> struct bases_impl
@@ -31,8 +28,6 @@ template<typename DerT, typename T, typename... Ts> struct bases_impl<DerT, type
 template<typename T> struct bases
     : bases_impl<T, tlist> {};
 
-//template<typename T> struct bases_mpl
- //   : typelist2vector<typename bases<T>::type> {};
 
 template<typename DerT, typename...> struct base2 { using type = void; };
 
@@ -44,16 +39,9 @@ template<typename DerT, typename T, typename... Ts> struct base2<DerT, typelist<
     using type = typename std::conditional<_tail_better, _tail, T>::type;
 };
 
-template<typename T> struct base {
-    //using _bases = typename bases_mpl<T>::type;
-	//using iter = typename max_element<_bases, is_strict_base_of<_1, _2>>::type;
-	//using type = typename deref<iter>::type;
+template<typename T> struct base
+    : base2<T, tlist> {}; // TODO: What if already sorted by is_base_of
 
-    using type = typename base2<T, tlist>::type;
-
-	// TODO: What if already sorted by is_base_of
-	//using type = typename back<_bases>::type;
-};
 
 template<typename T> struct is_root {
 	static const bool value = std::is_same<T, typename T::root_class>::value;
@@ -67,13 +55,7 @@ template<typename T0, typename T> struct is_bro
 };
 
 template<typename T> struct level
-    : tl_size<typename bases<T>::type> {}; // TODO: Use count_if
-
-
-
-//template<typename T> struct bros {
-//	using type = typename copy_if<types, is_bro<T, _>, back_inserter<vector<>>>::type;
-//};
+    : size<typename bases<T>::type> {}; // TODO: Use count_if
 
 
 template<index_t idx, typename ChildT, typename...> struct child_idx
@@ -91,15 +73,9 @@ template<index_t idx, typename ChildT, typename T, typename... Ts> struct child_
     static const index_t value = _its_me ? idx : child_idx<curr_idx, ChildT, typelist<Ts...>>::value;   // TODO: Use integra_constant here
 };
 
+template<typename T> struct child_index
+    : child_idx<0, T, tlist> {};
 
-
-template<typename T> struct child_index {
-	//using _bros = typename bros<T>::type;
-	//using _it = typename find<_bros, T>::type;
-    //static const index_t value = _it::pos::value;
-    static const index_t value = child_idx<0, T, tlist>::value;
-
-};
 
 template<typename T> struct id;
 
@@ -119,6 +95,7 @@ template<typename T> struct id {
 	static const bool _is_root = is_root<T>::value;
 	static const index_t value = id_impl<T, _is_root>::value;
 };
+
 
 template<typename T>
 struct class_info
