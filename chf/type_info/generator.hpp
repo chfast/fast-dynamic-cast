@@ -11,6 +11,7 @@ namespace type_info
 // TODO Diagnostics: Only classes can be on list
 // TODO Diagnostics: Unique types
 // TODO Opt: Finding children once can be benefitial
+// TODO Opt: no abstract classes
 
 using index0_type = std::integral_constant<index_t, 0>;
 
@@ -50,12 +51,9 @@ template<index_t idx, typename ChildT, typename T, typename... Ts> struct child_
 	//static const index_t value = std::conditional<_its_me, std::integral_constant<index_t, idx>, std::integral_constant<index_t, child_idx<curr_idx, ChildT, typelist<Ts...>>::value>>::type::value;
 };
 
-template<typename T> struct child_index
-    : child_idx<0, T, TYPES> {};
-
 
 template<typename T> struct index {
-	static const index_t _index = child_index<T>::value + 1;
+	static const index_t _index = child_idx<1, T, TYPES>::value;
 	using _base = typename base<T>::type;
 	static const index_t value = index<_base>::value + (_index << (8 * depth<_base>::value));
 };
