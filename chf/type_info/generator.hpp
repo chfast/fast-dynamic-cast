@@ -12,6 +12,8 @@ namespace type_info
 // TODO Diagnostics: Unique types
 // TODO Opt: Finding children once can be benefitial
 
+using index0_type = std::integral_constant<index_t, 0>;
+
 template<typename BaseT, typename DerT> struct is_strict_base_of
     : std::integral_constant<bool, !std::is_same<BaseT, DerT>::value && std::is_base_of<BaseT, DerT>::value> {};
 
@@ -28,25 +30,14 @@ template<typename DerT, typename T, typename... Ts> struct base2<DerT, T, Ts...>
 template<typename T> struct base
     : base2<T, TYPES> {}; // TODO: What if already sorted by is_base_of
 
-template<typename T0, typename T> struct is_bro
-{
-	using _base0 = typename base<T0>::type;
-	using _base = typename base<T>::type;
-	static const bool value = std::is_same<_base0, _base>::value;
-};
-
 
 template<typename T> struct depth
 	: std::integral_constant<index_t, depth<typename base<T>::type>::value + 1> {};
 
-template<> struct depth<void>
-	: std::integral_constant<index_t, 0> {};
+template<> struct depth<void> : index0_type {};
 
 
-template<index_t idx, typename ChildT, typename...> struct child_idx
-{
-    static const index_t value = -1;
-};
+template<index_t idx, typename ChildT, typename...> struct child_idx : index0_type {}; // TODO: Can be undefined?
 
 template<index_t idx, typename ChildT, typename T, typename... Ts> struct child_idx<idx, ChildT, T, Ts...>
 {
@@ -64,18 +55,15 @@ template<typename T> struct child_index
 
 
 template<typename T> struct index {
-	static const index_t depth = type_info::depth<T>::value;
 	static const index_t _index = child_index<T>::value + 1;
 	using _base = typename base<T>::type;
-	static const index_t value = index<_base>::value + (_index << (8 * (depth - 1)));
+	static const index_t value = index<_base>::value + (_index << (8 * depth<_base>::value));
 };
 
-template<> struct index<void> {
-	static const index_t value = 0;
-};
+template<> struct index<void> : index0_type {};
 
 template<typename T>
-index_t get_class_index()
+index_t get_class_index() // TODO: constexpr?
 {
 	return index<T>::value;
 }
@@ -84,19 +72,26 @@ index_t get_class_index()
 template<typename T>
 bool isa_impl(typename const T::root_class* obj) noexcept
 {
-	using dst_index = index<T>;
-	static const index_t FULL_MASK = -1;
-	static const auto mask = FULL_MASK << (8 * dst_index::depth);
+	// TODO: Optimization equal indexes
 
+	static const index_t mask = (index_t(1) << (8 * depth<T>::value)) - 1;
 	auto obj_index = obj->class_index;
+	auto masked_index = obj_index & mask;
+	return masked_index == index<T>::value;
+}
 
-	// TODO: Optimization
-	//if (did == bid)
-	//	return true;
 
-	auto masked_index = obj_index & ~mask;
-	auto r = masked_index == dst_index::value;
-	return r;
+template<typename T>
+void gen(T*)
+{
+	chf::type_info::get_class_index<T>();
+	chf::type_info::isa_impl<T>(nullptr);
+}
+
+template<typename... Types>
+void register_classes()
+{
+	std::initializer_list<int> {(gen(static_cast<Types*>(nullptr)), 0)...};
 }
 
 }

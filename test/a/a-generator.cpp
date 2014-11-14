@@ -13,22 +13,9 @@ F0, F1, F2, F3, F4
 
 #include <chf/type_info/generator.hpp>
 
-template<typename T>
-void gen(T*)
+void ff()	// TODO: Use template instance
 {
-	chf::type_info::get_class_index<T>();
-	chf::type_info::isa_impl<T>(nullptr);
-}
-
-template<typename... Types>
-void gen_all()
-{
-	std::initializer_list<int> {(gen(static_cast<Types*>(nullptr)), 0)...};
-}
-
-void ff()	// TODO: Make this fake functions anonymous
-{
-	gen_all<TYPES>();
+	chf::type_info::register_classes<TYPES>();
 }
 
 namespace fdctest {
