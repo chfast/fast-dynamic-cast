@@ -1,11 +1,15 @@
 
 #include "a/test.h"
+#include "random.hpp"
 
 #include <exception>
 #include <iostream>
 
 int main()
 {
+
+    chf::random_test(std::cout, 2000, 8, 200);
+
 	using namespace fdctest;
 
 	try {

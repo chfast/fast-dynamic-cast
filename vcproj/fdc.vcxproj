@@ -15,12 +15,14 @@
     <ClInclude Include="..\chf\type_info\generator.hpp" />
     <ClInclude Include="..\test\a\a.h" />
     <ClInclude Include="..\test\a\test.h" />
+    <ClInclude Include="..\test\random.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source.cpp" />
     <ClCompile Include="..\test\a\a-generator.cpp" />
     <ClCompile Include="..\test\a\a.cpp" />
     <ClCompile Include="..\test\a\test-a.cpp" />
+    <ClCompile Include="..\test\random.cpp" />
     <ClCompile Include="..\test\test-main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

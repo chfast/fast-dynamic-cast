@@ -13,6 +13,9 @@
     <ClInclude Include="..\chf\type_info\generator.hpp">
       <Filter>chf\type_info</Filter>
     </ClInclude>
+    <ClInclude Include="..\test\random.hpp">
+      <Filter>test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source.cpp" />
@@ -27,6 +30,9 @@
     </ClCompile>
     <ClCompile Include="..\test\a\a-generator.cpp">
       <Filter>test\a</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\random.cpp">
+      <Filter>test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
