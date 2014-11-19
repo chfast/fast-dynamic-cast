@@ -16,6 +16,15 @@
     <ClInclude Include="..\test\random.hpp">
       <Filter>test</Filter>
     </ClInclude>
+    <ClInclude Include="..\test\gen\gen100.hpp">
+      <Filter>test\gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\test\gen\gen101.hpp">
+      <Filter>test\gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\test\gen\gen40.hpp">
+      <Filter>test\gen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source.cpp" />
@@ -47,6 +56,9 @@
     </Filter>
     <Filter Include="chf\type_info">
       <UniqueIdentifier>{828a6b1f-202c-4bf6-8ad9-20163f2de048}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\gen">
+      <UniqueIdentifier>{76f733fc-bcea-48e1-b414-79d339984f8d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

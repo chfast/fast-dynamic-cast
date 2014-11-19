@@ -4,11 +4,12 @@
 
 #include <exception>
 #include <iostream>
+#include <fstream>
 
 int main()
 {
-
-    chf::random_test(std::cout, 2000, 8, 200);
+    //std::ofstream out("../test/gen/gen40.hpp");
+    //chf::random_test(out, 40, 4, 10);
 
 	using namespace fdctest;
 
