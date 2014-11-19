@@ -25,6 +25,9 @@
     <ClInclude Include="..\test\gen\gen40.hpp">
       <Filter>test\gen</Filter>
     </ClInclude>
+    <ClInclude Include="..\test\helper.hpp">
+      <Filter>test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source.cpp" />

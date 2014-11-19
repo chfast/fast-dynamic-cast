@@ -2,6 +2,7 @@
 #include "a.h"
 
 #include <chf/type_info.hpp>
+#include <test/helper.hpp>
 
 #include <stdexcept>
 #include <string>
@@ -9,29 +10,15 @@
 namespace fdctest {
 namespace a {
 
-template<typename ObjectT, typename ClassT>
-bool tester()
-{
-	Root* ref = new ObjectT;
-	auto isa = chf::type_info::isa<ClassT>(*ref);
-	auto dyn = dynamic_cast<ClassT*>(ref) != nullptr;
-	return isa == dyn;
-}
-
 void test_gen();
 
 void test()
 {
-	#define TEST(OBJECT, CLASS) { \
-		if (!tester<OBJECT, CLASS>()) { \
-			throw std::runtime_error(#OBJECT " vs " #CLASS); \
-		} \
-	}
+	#define TEST(OBJECT, CLASS) chf::test::test_isa<OBJECT, CLASS>()
 
 	test_gen();
 
-	auto b = chf::type_info::isa<A0>(Root());
-	b = chf::type_info::isa<Root>(Root());
+	chf::test::test_classes<A0, B0, B2>();
 
 	TEST(Root, Root);   // TODO: Create template test generation 
 

@@ -80,7 +80,7 @@ bool isa_impl(typename const T::root_class* obj) noexcept
 
 
 template<typename T>
-void gen(T*)
+void gen(T*) // TODO: Remove fake param - not needed, use explicit template param type
 {
 	chf::type_info::get_class_index<T>();
 	chf::type_info::isa_impl<T>(nullptr);
