@@ -23,10 +23,10 @@ void test_isa()
 	}
 }
 
-template<typename... OuterTs>
+template<typename...>
 struct outer_tester
 {
-	template<typename... InTs>
+	template<typename...>
 	static void inner_tester() {}
 };
 
@@ -41,11 +41,18 @@ struct outer_tester<OuterT, OuterTs...>
 	}
 };
 
-template<typename... ClassTs>
-void test_classes()
+template<typename... Classes>
+struct tester
 {
-	outer_tester<ClassTs...>::inner_tester<ClassTs...>();
-}
+	static void run()
+	{
+		outer_tester<Classes...>::inner_tester<Classes...>();
+	}
+};
+
+template<typename... Classes>
+struct tester<type_info::class_list<Classes...>> : tester<Classes...> {};
+
 
 
 }

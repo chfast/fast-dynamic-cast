@@ -29,7 +29,7 @@ template<typename DerT, typename T, typename... Ts> struct base2<DerT, T, Ts...>
 };
 
 template<typename T> struct base
-    : base2<T, TYPES> {}; // TODO: What if already sorted by is_base_of
+    : base2<T, classes> {}; // TODO: What if already sorted by is_base_of
 
 
 template<typename T> struct depth
@@ -53,7 +53,7 @@ template<index_t idx, typename ChildT, typename T, typename... Ts> struct child_
 
 
 template<typename T> struct index {
-	static const index_t _index = child_idx<1, T, TYPES>::value;
+	static const index_t _index = child_idx<1, T, classes>::value;
 	using _base = typename base<T>::type;
 	static const index_t value = index<_base>::value + (_index << (8 * depth<_base>::value));
 };
@@ -80,17 +80,29 @@ bool isa_impl(typename const T::root_class* obj) noexcept
 
 
 template<typename T>
-void gen(T*) // TODO: Remove fake param - not needed, use explicit template param type
+void gen() // TODO: Remove fake param - not needed, use explicit template param type
 {
 	chf::type_info::get_class_index<T>();
 	chf::type_info::isa_impl<T>(nullptr);
 }
 
-template<typename... Types>
-void register_classes()
+template<typename... Classes>
+struct registrar
 {
-	std::initializer_list<int> {(gen(static_cast<Types*>(nullptr)), 0)...};
-}
+	static void run()
+	{
+		std::initializer_list<int> {(gen<Classes>(), 0)...};
+	}
+};
+
+template<typename... Classes>
+struct registrar<class_list<Classes...>>
+{
+	static void run()
+	{
+		std::initializer_list<int> {(gen<Classes>(), 0)...};
+	}
+};
 
 }
 }

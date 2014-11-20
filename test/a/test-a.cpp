@@ -11,7 +11,7 @@ namespace test
 void test_a()
 {
 	using namespace a;
-	chf::test::test_classes<TYPES>();
+	chf::test::tester<classes>::run();
 }
 
 

@@ -48,7 +48,7 @@ namespace a {
     class F3 : public E0, chf::type_info::with<F3> {};
     class F4 : public E0, chf::type_info::with<F4> {};
 
-#define TYPES \
+#define classes \
 A0, A1, A2, A3, A4, \
 B0, B1, B2, B3, B4, \
 C0, C1, C2, C3, C4, \

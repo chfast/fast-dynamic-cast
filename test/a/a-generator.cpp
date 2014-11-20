@@ -4,4 +4,4 @@ using namespace chf::test::a;
 
 #include <chf/type_info/generator.hpp>
 
-template void chf::type_info::register_classes<TYPES>();
+template struct chf::type_info::registrar<classes>;

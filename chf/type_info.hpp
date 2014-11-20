@@ -32,6 +32,8 @@ struct with
 	}
 };
 
+template<typename... ClassTs> struct class_list {};
+
 template<typename T>
 bool isa_impl(typename const T::root_class*) noexcept;
 
