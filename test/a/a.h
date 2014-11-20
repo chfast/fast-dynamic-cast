@@ -3,7 +3,8 @@
 
 #include <chf/type_info.hpp>
 
-namespace fdctest {
+namespace chf {
+namespace test {
 namespace a {
 
 	class Root : public chf::type_info::root<Root> {
@@ -55,4 +56,4 @@ D0, D1, D2, D3, D4, \
 E0, E1, E2, E3, E4, \
 F0, F1, F2, F3, F4
 
-}}
+}}}

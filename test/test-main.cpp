@@ -1,5 +1,4 @@
 
-#include "a/test.h"
 #include "random.hpp"
 
 #include <exception>
@@ -10,6 +9,7 @@ namespace chf
 {
 namespace test
 {
+	void test_a();
 	void test_gen40();
 }
 }
@@ -19,11 +19,10 @@ int main()
     //std::ofstream out("../test/gen/gen40.hpp");
     //chf::random_test(out, 40, 4, 10);
 
-	using namespace fdctest;
 	using namespace chf::test;
 
 	try {
-		a::test();
+		test_a();
 		test_gen40();
 	}
 	catch (std::exception& ex) {

@@ -1,21 +1,16 @@
 
 #include "a.h"
 
-#include <chf/type_info.hpp>
 #include <test/helper.hpp>
 
-#include <stdexcept>
-#include <string>
-
-namespace fdctest {
-namespace a {
-
-void test_gen();
-
-void test()
+namespace chf
 {
-	test_gen();
+namespace test
+{
 
+void test_a()
+{
+	using namespace a;
 	chf::test::test_classes<TYPES>();
 }
 

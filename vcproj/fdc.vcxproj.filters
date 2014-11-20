@@ -4,9 +4,6 @@
     <ClInclude Include="..\test\a\a.h">
       <Filter>test\a</Filter>
     </ClInclude>
-    <ClInclude Include="..\test\a\test.h">
-      <Filter>test\a</Filter>
-    </ClInclude>
     <ClInclude Include="..\chf\type_info.hpp">
       <Filter>chf</Filter>
     </ClInclude>
@@ -33,9 +30,6 @@
     <ClCompile Include="..\Source.cpp" />
     <ClCompile Include="..\test\test-main.cpp">
       <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\test\a\a.cpp">
-      <Filter>test\a</Filter>
     </ClCompile>
     <ClCompile Include="..\test\a\test-a.cpp">
       <Filter>test\a</Filter>
