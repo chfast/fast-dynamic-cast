@@ -46,6 +46,12 @@
     <ClCompile Include="..\test\random.cpp">
       <Filter>test</Filter>
     </ClCompile>
+    <ClCompile Include="..\test\gen\gen40-registrar.cpp">
+      <Filter>test\gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\gen\gen40-test.cpp">
+      <Filter>test\gen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="test">

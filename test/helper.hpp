@@ -12,7 +12,7 @@ template<typename ObjectT, typename ClassT>
 void test_isa()
 {
 	// TODO: Record test statistics, timmings
-	std::cout << "Testing " << typeid(ClassT).name() << " - " << typeid(ObjectT).name() << std::endl;
+	//std::cout << "Testing " << typeid(ClassT).name() << " - " << typeid(ObjectT).name() << std::endl;
 	ObjectT::root_class* ref = new ObjectT;
 	auto isa = chf::type_info::isa<ClassT>(*ref);
 	auto dyn = dynamic_cast<ClassT*>(ref) != nullptr;

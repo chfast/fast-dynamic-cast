@@ -26,6 +26,8 @@
     <ClCompile Include="..\test\a\a-generator.cpp" />
     <ClCompile Include="..\test\a\a.cpp" />
     <ClCompile Include="..\test\a\test-a.cpp" />
+    <ClCompile Include="..\test\gen\gen40-registrar.cpp" />
+    <ClCompile Include="..\test\gen\gen40-test.cpp" />
     <ClCompile Include="..\test\random.cpp" />
     <ClCompile Include="..\test\test-main.cpp" />
   </ItemGroup>

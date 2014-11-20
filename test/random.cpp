@@ -53,7 +53,7 @@ void random_test(std::ostream& out, uint64_t n, uint64_t max_depth, uint64_t max
     };
 
     out << "#include <chf/type_info.hpp>\n\n"
-        << "namespace chf\n{\nnamespace test\n{\n\n"
+        << "namespace chf\n{\nnamespace test\n{\nnamespace gen" << n <<"\n{\n\n"
         << "template<typename T> using ci = type_info::with<T>;\n"
         << "template<typename T> using ci_root = type_info::root<T>;\n\n"
         << "class Root : ci_root<Root> {};\n";
@@ -61,7 +61,7 @@ void random_test(std::ostream& out, uint64_t n, uint64_t max_depth, uint64_t max
     out << "\n#define CLASSES Root, ";
     std::copy(classes.begin(), classes.end() - 1, std::ostream_iterator<std::string>(out, ", "));
     out << classes.back();
-    out << "\n}\n}\n";
+	out << "\n}\n}\n}\n";
 }
 
 }
