@@ -11,6 +11,8 @@ namespace test
 template<typename ObjectT, typename ClassT>
 void test_isa()
 {
+	// TODO: Record test statistics, timmings
+	std::cout << "Testing " << typeid(ClassT).name() << " - " << typeid(ObjectT).name() << std::endl;
 	ObjectT::root_class* ref = new ObjectT;
 	auto isa = chf::type_info::isa<ClassT>(*ref);
 	auto dyn = dynamic_cast<ClassT*>(ref) != nullptr;
@@ -21,29 +23,28 @@ void test_isa()
 	}
 }
 
-template<typename T, typename U>
-void fake_test()
+template<typename... OuterTs>
+struct outer_tester
 {
-	std::cout << "Testing " << typeid(T).name() << " - " << typeid(T).name() << std::endl;
-}
-
-template<typename...>
-struct outter
-{
+	template<typename... InTs>
+	static void inner_tester() {}
 };
 
-template<template<typename> class Tpl, typename ClassT>
-struct outter<Tpl<ClassT>>
+template<typename OuterT, typename... OuterTs>
+struct outer_tester<OuterT, OuterTs...>
 {
-	static void go() {}
+	template<typename... InnerTs>
+	static void inner_tester()
+	{
+		std::initializer_list<int> {(test_isa<OuterT, InnerTs>(), 0)...};
+		outer_tester<OuterTs...>::inner_tester<InnerTs...>();
+	}
 };
 
 template<typename... ClassTs>
 void test_classes()
 {
-	//using tpl = outter<void>;
-	//outter<tpl>::go();
-	std::initializer_list<int> {(fake_test<ClassTs, ClassTs>(), 0)...};
+	outer_tester<ClassTs...>::inner_tester<ClassTs...>();
 }
 
 
